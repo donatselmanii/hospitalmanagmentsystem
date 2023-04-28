@@ -1,10 +1,7 @@
 import React from 'react';
-<<<<<<< Updated upstream
 import ReactDOM from 'react-dom/client';
-=======
 import ReactDOM from 'react-dom';
 import './index.css';
->>>>>>> Stashed changes
 import App from './App';
 
 
