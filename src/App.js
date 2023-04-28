@@ -1,12 +1,11 @@
 import './App.css';
+import Homepage from './components/Homepage';
+import Navbar from './components/Homepage';
 
 function App() {
   return (
     <div className="App">
-      <p>Hello Donat!</p>
-      <p>Hello Fanol!</p>
-      <p>Hello Arbnor!</p>
-      <p>Committing working successfully!</p>
+      <Homepage />
     </div>
   );
 }
