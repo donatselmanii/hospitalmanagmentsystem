@@ -1,7 +1,7 @@
 import '../../css/largedevices/largedevices.css';
 import '../../css/mediumdevices/mediumdevices.css';
 import '../../css/smalldevices/smalldevices.css';
-
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 function Navbar() {
   return (
     <>
@@ -36,7 +36,7 @@ function Navbar() {
                                     <li><a href="#">DOCTORS</a></li>
                                     <li><a href="#">PAGES</a></li>
                                     <li><a href="#">CONTACT</a></li>
-                                    <li><a href="#">LOGIN</a></li>
+                                    <li><Link to="/Login"><a href="#">LOGIN</a></Link></li>
                                     
                                 </ul>
                             </nav>
