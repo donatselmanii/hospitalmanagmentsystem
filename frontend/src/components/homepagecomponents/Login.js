@@ -16,7 +16,7 @@ function Login(){
          if(response.data.message){
             setLoginStatus(response.data.message);
          }else{
-            setLoginStatus(response.data[0].idnum);
+            setLoginStatus(response.data[0].role);
          }
     });
     }
@@ -29,7 +29,6 @@ function Login(){
             <br></br>
             <button onClick={Login}>Log In</button>
             <Link to="/Register">Register</Link>
-            <h1>{loginstatus}</h1>
         </div>
     );
     
