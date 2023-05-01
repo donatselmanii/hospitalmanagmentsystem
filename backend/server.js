@@ -2,6 +2,9 @@ import express from 'express'
 import mysql from 'mysql'
 import cors from 'cors'
 import bcrypt from 'bcrypt'
+import session from 'express-session'
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 
 const app= express()
 app.use(express.json())
@@ -11,6 +14,19 @@ app.use(cors({
     origin:"*",
     methods:['POST', 'GET', 'PUT', 'DELETE'],
 }));
+
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(session({
+    key: 'userId',
+    secret: 'mySecretKey',
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+        expires: 60*60*24,
+    },
+  }));
 
 const db = mysql.createConnection({
     host:"localhost",
@@ -75,6 +91,8 @@ app.post("/login" ,(req, res)=>{
                     if (error) {
                         res.send({ message: "Error comparing passwords" });
                     } else if (response) {
+                        req.session.user = results;
+                        console.log(req.session.user);
                         res.send(results);
                     } else {
                         res.send({ message: "Wrong password!" });
@@ -87,7 +105,13 @@ app.post("/login" ,(req, res)=>{
     );
 });
 
-
+app.get("/login", (res,req)=>{
+    if(req.session.user){
+        res.send({ loggedIn: true, user: req.session.user });
+    }else{
+        res.send({ loggedIn: false });
+    }
+})
 
 const port = 8081;
 app.listen(port, () => {

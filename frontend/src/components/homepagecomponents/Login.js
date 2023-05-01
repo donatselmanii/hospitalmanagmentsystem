@@ -1,4 +1,4 @@
-import react from 'react'
+import react, { useEffect } from 'react'
 import React, { useState } from 'react';
 import axios from 'axios';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
@@ -8,6 +8,8 @@ function Login(){
     const[Password, setPassword] = useState("");
     const[loginstatus, setLoginStatus] = useState("");
 
+    
+
     const Login = () =>{
         axios.post("http://localhost:8081/login",{
         idnum: Idnum,
@@ -16,10 +18,18 @@ function Login(){
          if(response.data.message){
             setLoginStatus(response.data.message);
          }else{
-            setLoginStatus(response.data[0].role);
+            setLoginStatus(response.data[0].idnum);
          }
     });
     }
+
+    useEffect(()=>{
+        axios.get("http://localhost:8081/login").then((response)=>{
+            if(response.data.loggedIn ==true){
+            setLoginStatus(response.data.user[0].idnum);
+        }});
+    },[])
+
     return(
         <div>
             <p>ID</p>
@@ -29,6 +39,7 @@ function Login(){
             <br></br>
             <button onClick={Login}>Log In</button>
             <Link to="/Register">Register</Link>
+            <h1>{loginstatus}</h1>
         </div>
     );
     
