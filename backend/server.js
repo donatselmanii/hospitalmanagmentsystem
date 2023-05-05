@@ -48,6 +48,41 @@ app.get("/user", (req,res)=>{
     })
 })
 
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const q = "DELETE FROM user WHERE id = ?";
+  db.query(q, [id], (error, result) => {
+    if (error) return res.json(error);
+    return res.json(result);
+  });
+});
+
+app.put('/users/:id', (req, res) => {
+  const id = req.params.id;
+  const idnum = req.body.idnum;
+  const name = req.body.name;
+  const surname = req.body.surname;
+  const phone = req.body.phone;
+  const email = req.body.email;
+  const password = req.body.password;
+  const role = req.body.role;
+
+  console.log(`Updating user with ID ${id}`);
+  
+  const q = `UPDATE user SET idnum=?, name=?, surname=?, phone=?, email=?, password=?, role=? WHERE id=?`;
+  db.query(q, [idnum, name, surname, phone, email, password, role, id], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send('Error updating user');
+    } else if (results.affectedRows === 0) {
+      res.status(404).send('User not foundddd');
+    } else {
+      res.send(`User with ID ${id} updated successfully`);
+      console.log(`User with ID ${id} updated successfully`);
+    }
+  });
+});
+
 app.post("/register" ,(req, res)=>{
     const idnum = req.body.idnum;
     const name = req.body.name;
