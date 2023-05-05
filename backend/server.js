@@ -140,6 +140,56 @@ app.post("/login" ,(req, res)=>{
     );
 });
 
+app.post("/contactform", (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const comment = req.body.comment;
+  
+    console.log("Received message:", name, email, comment);
+  
+    db.query(
+      "INSERT INTO contactform (name, email, comment) VALUES (?, ?, ?)",
+      [name, email, comment],
+      (err, results) => {
+        if (err) {
+          console.log(err.message);
+          res.status(500).send("Failed to insert message into database");
+          console.log("Failed to insert message into database");
+        } else {
+          console.log("Message sent successfully");
+          res.status(200).send("Message sent successfully");
+        }
+      }
+    );
+  });
+  
+  app.get("/contactformfetch", (req,res)=>{
+    const q="SELECT * FROM contactform"
+    db.query(q,(error,data)=>{
+        if(error) return res.json(error)
+        return res.json(data)
+    })
+  })
+  app.put('/contactform/:id', (req, res) => {
+    const id = req.params.id;
+    const status = "Message has been answered in email";
+  
+    console.log(`Confirming message with ID ${id}`);
+    
+    const q = `UPDATE user SET status=? WHERE id=?`;
+    db.query(q, [status, id], (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send('Error Answering');
+      } else if (results.affectedRows === 0) {
+        res.status(404).send('Message not found');
+      } else {
+        res.send(`Message with ID ${id} confirmed successfully`);
+        console.log(`Message with ID ${id} confirmed successfully`);
+      }
+    });
+  });
+
 app.get("/login", (res,req)=>{
     if(req.session.user){
         res.send({ loggedIn: true, user: req.session.user });
