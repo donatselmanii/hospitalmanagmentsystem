@@ -1,53 +1,52 @@
 import express from 'express'
-import mysql from 'mysql'
 import cors from 'cors'
 import bcrypt from 'bcrypt'
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 
-const app= express()
+import ContactFormRoutes from './Routes/ContactFormRoutes.js';
+import UserRoutes from './Routes/UserRoutes.js';
+import AppointmentRoutes from './Routes/AppointmentRoutes.js';
+
+const app = express()
+
 app.use(express.json())
-const saltRounds=10
+const saltRounds = 10
 
 app.use(cors({
-    origin:"*",
-    methods:['POST', 'GET', 'PUT', 'DELETE'],
+  origin: "*",
+  methods: ['POST', 'GET', 'PUT', 'DELETE'],
 }));
 
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
-    key: 'userId',
-    secret: 'mySecretKey',
-    resave: false,
-    saveUninitialized: false,
-    cookie:{
-        expires: 60*60*24,
-    },
-  }));
+  key: 'userId',
+  secret: 'qelsijetes',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    sameSite: true,
+    secure: false,
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 1000 
+  }
+}));
 
-const db = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"",
-    database:"usertest"
+app.get("/", (req, res) => {
+  res.json('hello this is backend')
 })
 
-app.get("/", (req,res)=>{
-    res.json('hello this is backend')
-})
+app.use('/contactform', ContactFormRoutes);
+app.use('/users', UserRoutes);
+app.use('/appointments', AppointmentRoutes);
 
 
-app.get("/user", (req,res)=>{
-    const q="SELECT * FROM user"
-    db.query(q,(error,data)=>{
-        if(error) return res.json(error)
-        return res.json(data)
-    })
-})
 
+<<<<<<< Updated upstream
 app.delete("/users/:id", (req, res) => {
   const id = req.params.id;
   const q = "DELETE FROM user WHERE id = ?";
@@ -90,27 +89,14 @@ app.post("/register" ,(req, res)=>{
     const phone = req.body.phone;
     const email = req.body.email;
     const password = req.body.password;
+=======
+app.put('/users/:id', (req, res) => {
+ const updatedUser = updateUser(req, res)
+>>>>>>> Stashed changes
 
-    bcrypt.hash(password, saltRounds, (err, hash) => {
-        if (err) {
-            console.log(err)
-        }
-        db.query(
-            "INSERT INTO user (idnum, name, surname, phone, email, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [idnum, name, surname, phone, email, hash, 'patient'],
-            (err, results) => {
-                if (err) {
-                    console.log(err.message);
-                } else {
-                    console.log('Data inserted successfully');
-                }
-            }
-        );
-    });
-    
-    
 });
 
+<<<<<<< Updated upstream
 app.post("/login" ,(req, res)=>{
     const idnum = req.body.idnum;
     const password = req.body.password;
@@ -197,6 +183,8 @@ app.get("/login", (res,req)=>{
         res.send({ loggedIn: false });
     }
 })
+=======
+>>>>>>> Stashed changes
 
 const port = 8081;
 app.listen(port, () => {

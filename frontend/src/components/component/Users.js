@@ -8,7 +8,11 @@ function Users() {
 
   useEffect(() => {
     async function fetchData() {
+<<<<<<< Updated upstream
       const response = await axios.get("http://localhost:8081/user");
+=======
+      const response = await axios.get("http://localhost:8081/users");
+>>>>>>> Stashed changes
       setUsers(response.data);
     }
     fetchData();

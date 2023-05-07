@@ -3,13 +3,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 
+
 function Login(){
     const[Idnum, setIdnum] = useState("");
     const[Password, setPassword] = useState("");
     const[loginstatus, setLoginStatus] = useState("");
-
+    const[role, setrole] = useState("");
     
-
+   /* 
     const Login = () =>{
         axios.post("http://localhost:8081/login",{
         idnum: Idnum,
@@ -19,16 +20,31 @@ function Login(){
             setLoginStatus(response.data.message);
          }else{
             setLoginStatus(response.data[0].idnum);
+            setrole(response.data[0].role);
          }
     });
-    }
+    }*/
+    const login = () => {
+        axios.post("http://localhost:8081/login", {
+          idnum: Idnum,
+          password: Password,
+        }).then((response) => {
+          if (response.data.message) {
+            setLoginStatus(response.data.message);
+          } else {
+            setLoginStatus(response.data[0].idnum);
+            setrole(response.data[0].role);
+          }
+        });
+      };
 
-    useEffect(()=>{
-        axios.get("http://localhost:8081/login").then((response)=>{
-            if(response.data.loggedIn ==true){
+    useEffect(() => {
+        axios.get("http://localhost:8081/login").then((response) => {
+          if (response.data.loggedIn == true) {
             setLoginStatus(response.data.user[0].idnum);
-        }});
-    },[])
+          }
+        });
+      }, []);
 
     return(
         <div>
@@ -37,9 +53,10 @@ function Login(){
             <p>Password</p>
             <input type="text" onChange={(e) => { setPassword(e.target.value); }} />
             <br></br>
-            <button onClick={Login}>Log In</button>
+            <button onClick={login}>Log In</button>
             <Link to="/Register">Register</Link>
             <h1>{loginstatus}</h1>
+            <h1>{role}</h1>
         </div>
     );
     

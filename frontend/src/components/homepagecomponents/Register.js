@@ -2,6 +2,7 @@ import react from 'react'
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
 function Register(){
     const[IdnumReg, setIdnumReg] = useState("");
     const[NameReg, setNameReg] = useState("");
@@ -10,7 +11,6 @@ function Register(){
     const[EmailReg, setEmailReg] = useState("");
     const[PasswordReg, setPasswordReg] = useState("");
 
-    axios.defaults.withCredentials = true;
     const Register = () =>{
         axios.post("http://localhost:8081/register",{
         idnum: IdnumReg,
