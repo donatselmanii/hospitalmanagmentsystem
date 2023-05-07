@@ -43,7 +43,7 @@ export const ConfirmMessages = (req, res) => {
     const status = "Message has been answered in email";
     const q = `UPDATE user SET status=? WHERE id=?`;
 
-    db.query(q, [status, id], (error, results) => {
+    db.query(q, [id, status], (error, results) => {
       if (error) {
         console.error(error);
       } else {

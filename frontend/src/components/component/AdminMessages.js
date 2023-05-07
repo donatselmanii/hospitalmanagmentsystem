@@ -8,11 +8,7 @@ function AdminMessages() {
 
   useEffect(() => {
     async function fetchData() {
-<<<<<<< Updated upstream
-      const response = await axios.get("http://localhost:8081/contactformfetch");
-=======
       const response = await axios.get("http://localhost:8081/contactform/");
->>>>>>> Stashed changes
       setContactForms(response.data);
     }
     fetchData();

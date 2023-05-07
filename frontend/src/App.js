@@ -1,19 +1,15 @@
 import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homepage from './components/Homepage';
 import Main from './components/component/Main';
 import Login from './components/homepagecomponents/Login';
 import Register from './components/homepagecomponents/Register';
 import Patientpage from './components/component/Patientpage';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-<<<<<<< Updated upstream
-import AdminMessages from './components/component/AdminMessages';
-import ContactForm  from './components/component/ContactForm';
-=======
 import ContactForm from './components/component/ContactForm';
 import Users from './components/component/Users';
 import AdminMessages from './components/component/AdminMessages';
 import InsertAppointment from './components/component/User/InsertAppointment';
->>>>>>> Stashed changes
+
 
 function App() {
   return (
