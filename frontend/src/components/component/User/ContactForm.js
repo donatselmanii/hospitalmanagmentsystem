@@ -1,8 +1,7 @@
 import react from 'react'
-import '../../css/largedevices/ContactForm.css'
 import axios from 'axios'
 import React, { useState } from 'react';
-
+import '../../../css/largedevices/Contact.css'
 
 function ContactForm(){
     const[NameReg, setNameReg] = useState("");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Doctorpage from './Doctorpage';
 import Patientpage from './Patientpage';
-import Adminpage from './Adminpage';
+import Adminpage from './Admin/Adminpage';
 
 export default function Main() {
   const [role, setRole] = useState("");

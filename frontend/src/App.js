@@ -5,10 +5,11 @@ import Main from './components/component/Main';
 import Login from './components/homepagecomponents/Login';
 import Register from './components/homepagecomponents/Register';
 import Patientpage from './components/component/Patientpage';
-import ContactForm from './components/component/ContactForm';
-import Users from './components/component/Users';
-import AdminMessages from './components/component/AdminMessages';
+import ContactForm from './components/component/User/ContactForm';
+import Users from './components/component/Admin/Users';
+import AdminMessages from './components/component/Admin/AdminMessages';
 import InsertAppointment from './components/component/User/InsertAppointment';
+import AddCategory from './components/component/Admin/AddCategory';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/Users" element={<Users />} />
         <Route path="/AdminMessages" element={<AdminMessages />} />
         <Route path="/Appointment" element={<InsertAppointment />} />
+        <Route path="/AddCategory" element={<AddCategory />} />
         </Routes>
       </BrowserRouter>
     </div>
