@@ -1,7 +1,6 @@
-import react, { useEffect } from 'react'
-import React, { useState } from 'react';
+import react, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 
 
 function Login(){
@@ -9,42 +8,24 @@ function Login(){
     const[Password, setPassword] = useState("");
     const[loginstatus, setLoginStatus] = useState("");
     const[role, setrole] = useState("");
+    const navigate = useNavigate();   
     
-   /* 
-    const Login = () =>{
-        axios.post("http://localhost:8081/login",{
-        idnum: Idnum,
-        password: Password,
-    }).then((response)=>{
-         if(response.data.message){
-            setLoginStatus(response.data.message);
-         }else{
-            setLoginStatus(response.data[0].idnum);
-            setrole(response.data[0].role);
-         }
-    });
-    }*/
+  
+    axios.defaults.withCredentials=true;
     const login = () => {
         axios.post("http://localhost:8081/login", {
           idnum: Idnum,
           password: Password,
         }).then((response) => {
-          if (response.data.message) {
-            setLoginStatus(response.data.message);
-          } else {
-            setLoginStatus(response.data[0].idnum);
-            setrole(response.data[0].role);
+          if(response.data.Status === "Success"){
+            navigate('/Main')
+          } else{
+            console.log("Error!")
           }
         });
       };
 
-    useEffect(() => {
-        axios.get("http://localhost:8081/login").then((response) => {
-          if (response.data.loggedIn == true) {
-            setLoginStatus(response.data.user[0].idnum);
-          }
-        });
-      }, []);
+    
 
     return(
         <div>

@@ -1,35 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Doctorpage from './Doctorpage';
-import Patientpage from './Patientpage';
-import Adminpage from './Admin/Adminpage';
 
-export default function Main() {
-  const [role, setRole] = useState("");
+function Main() {
+  const [auth, setAuth] = useState(false);
+  const [message, setMessage] = useState('');
+  const [idnum, setIdnum] = useState('');
+  const navigate = useNavigate();
 
-  
   useEffect(() => {
-    axios.get("http://localhost:8081/login").then((response) => {
-      if (response.data.loggedIn == true) {
-        setRole(response.data.user[0].role);
+    axios.get('http://localhost:8081/login', { withCredentials: true }).then(res => {
+      if (res.data.Status === 'Success') {
+        setAuth(true);
+        setIdnum(res.data.idnum);
+      } else {
+        setAuth(false);
+        setMessage(res.data.error);
       }
-    });
+    }).catch(err => console.log(err))
   }, []);
 
-  useEffect(() => {
-    console.log("Role updated:", role);
-  }, [role]);
+  const handleLogout = () => {
+    // Send a request to the server to delete the token or perform any necessary logout actions
+    axios.post('http://localhost:8081/login/logout', { withCredentials: true }).then(res => {
+      // Clear the token and reset the authentication state
+      setAuth(false);
+      setIdnum('');
+      navigate('/');
+    }).catch(err => console.log(err));
+  };
 
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
+  
   return (
     <>
-      <p>Test main page</p>
-      <div>
-      {role =='patient' && <Patientpage />}
-      {role =='doctor' && <Doctorpage />}
-      {role =='admin' && <Adminpage />}
-      </div>
-      <h1>{role}</h1>
-    </> 
+    <p>Render</p>
+  {auth ? (
+    <>
+      <h3>Authorized with id number: {idnum}</h3>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <button onClick={handleLogout}>Logout</button>
+    </>
+  ) : (
+    <>
+          <h3>{message || 'You must be logged in. Please login.'}</h3>
+          <button onClick={handleLoginRedirect}>Go to Login</button>
+    </>
+  )}
+</>
+
   );
 }
 
+export default Main;

@@ -6,7 +6,8 @@ const router = express.Router();
 
 // This route is responsible about selecting user info from database
 // Used in: UserList.js(Frontend side)
-router.get('/', User);
+router.get('/', User)
+;
 
 // This route is responsible for updating user info
 // Used in: UserList.js(Frontend side)

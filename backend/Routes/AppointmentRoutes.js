@@ -1,5 +1,5 @@
 import express from 'express'
-import { DeleteAppointment, InsertAppointment } from '../Controllers/AppointmentController.js';
+import { DeleteAppointment, InsertAppointment, verifyToken } from '../Controllers/AppointmentController.js';
 
 
 const router = express.Router();
@@ -11,5 +11,9 @@ router.post('/', InsertAppointment);
 //
 //
 router.delete('/', DeleteAppointment);
+
+//
+//
+router.get('/', verifyToken);
 
 export default router

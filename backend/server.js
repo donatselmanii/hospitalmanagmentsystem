@@ -9,34 +9,21 @@ import ContactFormRoutes from './Routes/ContactFormRoutes.js';
 import UserRoutes from './Routes/UserRoutes.js';
 import AppointmentRoutes from './Routes/AppointmentRoutes.js';
 import CityCategoryRoutes from './Routes/CityCategoryRoutes.js';
+import LoginRoutes from './Routes/LoginRoutes.js';
+import DecodeTokenRoutes from './Routes/DecodeTokenRoutes.js';
 
 const app = express()
 
 app.use(express.json())
 
-const saltRounds = 10
+
 
 app.use(cors({
-  origin: "*",
+  origin: "http://localhost:3000",
   methods: ['POST', 'GET', 'PUT', 'DELETE'],
+  credentials: true,
 }));
 
-app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(session({
-  key: 'userId',
-  secret: 'qelsijetes',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    sameSite: true,
-    secure: false,
-    httpOnly: true,
-    maxAge: 60 * 60 * 24 * 1000 
-  }
-}));
 
 app.get("/", (req, res) => {
   res.json('hello this is backend')
@@ -46,6 +33,8 @@ app.use('/contactform', ContactFormRoutes);
 app.use('/users', UserRoutes);
 app.use('/appointments', AppointmentRoutes);
 app.use('/citycategory', CityCategoryRoutes);
+app.use('/login', LoginRoutes);
+app.use('/decode', DecodeTokenRoutes)
 
 app.put('/users/:id', (req, res) => {
  const updatedUser = updateUser(req, res)

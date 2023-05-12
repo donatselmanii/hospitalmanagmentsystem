@@ -1,4 +1,5 @@
 import db from '../Database/db.js'
+import bcrypt from 'bcrypt'
 
 
 // This function is responsible for selecting user info from database and showing it to the frontend code
@@ -50,17 +51,19 @@ export const DeleteUser = (req, res) => {
 
 // This function is responsible for user registration
 // Used in Register.js(Frontend side)
-
+const saltRounds = 10
 export const UserRegister = (req, res) => {
 
     const { idnum, name, surname, phone, email, password, role} = req.body;
-    const values = [idnum, name, surname, phone, email, hash, 'patient'];
+    
 
     bcrypt.hash(password, saltRounds, (error, hash) => {
       if (error) {
         console.log(error)
       }
 
+      const values = [idnum, name, surname, phone, email, hash, 'patient'];
+      
       db.query(
         "INSERT INTO user (idnum, name, surname, phone, email, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)",
         values, (error, results) => {
@@ -68,6 +71,7 @@ export const UserRegister = (req, res) => {
             console.log(err.message);
           } else {
             console.log('Data inserted successfully');
+            return res.json({Status : "Success"})
           }
         }
       );
