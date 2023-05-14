@@ -1,82 +1,85 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
+
+
+
 function InsertAppointment() {
-  const [DateTimeReg, setDateTimeReg] = useState('');
-  const [CityCategoryReg, setCityCategoryReg] = useState('');
-  const [CityCategories, setCityCategories] = useState([]);
-  const [userIdNum, setUserIdNum] = useState('');
+    const [DateTimeReg, setDateTimeReg] = useState('');
+    const [CityCategoryReg, setCityCategoryReg] = useState('');
+    const [CityCategories, setCityCategories] = useState([]);
+    const [idnum, setIdnum] = useState('');
 
-  const insertAppointment = async () => {
-    try {
-      const token = localStorage.getItem('token'); // Retrieve token from localStorage
-
-      // Make API call to retrieve the userIdNum
-      const response = await axios.post('/decode', { token });
-      const userIdNum = response.data.userIdNum;
-
-      // Make API call to insert the appointment
-      const appointmentResponse = await axios.post(
-        'http://localhost:8081/appointments',
-        {
-          useridnum: userIdNum,
-          datetime: DateTimeReg,
-          categoryname: CityCategoryReg,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-          },
+    useEffect(() => {
+      axios.get('http://localhost:8081/login', { withCredentials: true }).then(res => {
+        if (res.data.Status === 'Success') {
+          setIdnum(res.data.idnum);
+          console.log("Okay")
+        } else {
+          console.log("Not okay")
         }
-      );
+      }).catch(err => console.log(err))
+    }, []);
+    
 
-      console.log(appointmentResponse);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+    const InsertAppointment = () => {
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get('http://localhost:8081/citycategory');
-      setCityCategories(response.data);
-    }
-    fetchData();
-  }, []);
+      axios.post('http://localhost:8081/appointments', {
+        idnum,
+        datetime: DateTimeReg,
+        categoryname: CityCategoryReg,
+      }).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.error('Error:', error);
+      });
+    };
+    
+    
 
-  return (
-    <div className="card">
-      <div className="group">
-        <input
-          placeholder=""
-          type="datetime-local"
-          onChange={(e) => {
-            setDateTimeReg(e.target.value);
-          }}
-        />
-        <label>Date</label>
-      </div>
-      <div className="group">
-        <select
-          value={CityCategoryReg}
-          onChange={(e) => setCityCategoryReg(e.target.value)}
-        >
-          <option value="">Select a city category</option>
-          {CityCategories.map((citycategory) => (
-            <option key={citycategory.id} value={citycategory.categoryname}>
-              {citycategory.categoryname}
-            </option>
-          ))}
-        </select>
-      </div>
+    useEffect(() => {
+        async function fetchData() {
+            const response = await axios.get('http://localhost:8081/citycategory');
+            setCityCategories(response.data);
+        }
+        fetchData();
+    }, []);
 
-      <br />
-      <br />
-      <br />
-      <br />
-      <button onClick={insertAppointment}>Select an appointment</button>
-    </div>
-  );
+    return (
+        <div className="card">
+            <div className="group">
+                <input
+                    placeholder=""
+                    type="datetime-local"
+                    onChange={(e) => {
+                        setDateTimeReg(e.target.value);
+                    }}
+                />
+                <label>Date</label>
+            </div>
+            <div className="group">
+                <select
+                    value={CityCategoryReg}
+                    onChange={(e) => setCityCategoryReg(e.target.value)}>
+                    <option value="">Select a city category</option>
+                    {CityCategories.map((citycategory) => (
+                        <option key={citycategory.id} value={citycategory.categoryname}>
+                            {citycategory.categoryname}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <button onClick={InsertAppointment}>Select an appointment</button>
+        </div>
+    );
 }
 
 export default InsertAppointment;
+
+
+
