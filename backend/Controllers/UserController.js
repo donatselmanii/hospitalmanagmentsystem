@@ -77,3 +77,20 @@ export const UserRegister = (req, res) => {
       );
     });
 }
+
+//This function is responsible for counting users from database and returning the number of the total users!
+//Used in Dashboard.js(Frontend side).
+
+export const countUsers = (req, res) => {
+  const query = "SELECT COUNT(*) AS userCount FROM user";
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error:', error);
+      return;
+    }
+
+    const userCount = results[0].userCount;
+    res.json({ count: userCount });
+  });
+};
