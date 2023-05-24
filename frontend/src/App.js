@@ -1,16 +1,20 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Homepage from './components/Homepage';
+import Home from './components/Home';
 import Main from './components/component/Main';
-import Login from './components/homepagecomponents/Login';
-import Register from './components/homepagecomponents/Register';
+import Login from './components/Login';
+import Register from './components/Register';
 import Patientpage from './components/component/Patientpage';
 import ContactForm from './components/component/User/ContactForm';
 import Users from './components/component/Admin/Users';
 import AdminMessages from './components/component/Admin/AdminMessages';
 import InsertAppointment from './components/component/User/InsertAppointment';
 import AddCategory from './components/component/Admin/AddCategory';
-
+import Dashboard from './components/component/Admin/Dashboard/Dashboard';
+import AddProduct from './components/component/Admin/Dashboard/AddProduct';
+import AddProductTest from './components/component/Admin/AddProductTest';
+import InsertAppointmentTest from './components/component/User/InsertAppointmentTest';
+import MedicalReport from './components/component/Admin/MedicalReport';
 
 function App() {
   return (
@@ -18,7 +22,7 @@ function App() {
       <BrowserRouter>
         <Routes>
         <Route path="/Main" element={<Main />} />
-        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/AdminMessages" element={<AdminMessages />} />
@@ -28,7 +32,12 @@ function App() {
         <Route path="/Users" element={<Users />} />
         <Route path="/AdminMessages" element={<AdminMessages />} />
         <Route path="/Appointment" element={<InsertAppointment />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/AddProduct" element={<AddProduct />} />
+        <Route path="/AddProductTest" element={<AddProductTest />} />
         <Route path="/AddCategory" element={<AddCategory />} />
+        <Route path="/Test" element={<InsertAppointmentTest />} />
+        <Route path="/Report" element={<MedicalReport />} />
         </Routes>
       </BrowserRouter>
     </div>

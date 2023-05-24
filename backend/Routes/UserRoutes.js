@@ -1,5 +1,5 @@
 import express from 'express'
-import { User, UpdateUser, DeleteUser, UserRegister, countUsers }  from '../Controllers/UserController.js'
+import { User, RecentUser, UpdateUser, DeleteUser, UserRegister, CountUsers, CountDoctors }  from '../Controllers/UserController.js'
 
 
 const router = express.Router();
@@ -7,6 +7,10 @@ const router = express.Router();
 // This route is responsible about selecting user info from database
 // Used in: UserList.js(Frontend side)
 router.get('/', User);
+
+// This route is responsible about selecting user info from database
+// Used in: UserList.js(Frontend side)
+router.get('/recentusers', RecentUser);
 
 // This route is responsible for updating user info
 // Used in: UserList.js(Frontend side)
@@ -22,6 +26,11 @@ router.post('/', UserRegister);
 
 // This route is responsible about counting how many users are in database.
 // Used in: Dashboard.js(Frontend side)
-router.get('/count', countUsers);
+router.get('/count', CountUsers);
+
+
+//
+//
+router.get('/countDoctors', CountDoctors);
 
 export default router

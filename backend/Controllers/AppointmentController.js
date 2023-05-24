@@ -64,6 +64,25 @@ export const InsertAppointment = (req, res) => {
 };
 
 
+export const InsertAppointmentTest = (req, res) => {
+  const { idnum, citycategory, datetime, timeSlot } = req.body;
+  const appointmentDateTime = new Date(`${datetime}T${timeSlot}`).toISOString().slice(0, 19).replace('T', ' ');
+
+  // Define the SQL query
+  const q = 'INSERT INTO appointments (idnum, citycategory, appointment_datetime) VALUES (?, ?, ?)';
+
+  // Execute the query
+  db.query(q, [idnum, citycategory, appointmentDateTime], (error, results) => {
+    if (error) {
+      console.error('Error saving appointment:', error);
+      res.status(500).json({ message: 'Error saving appointment' });
+    } else {
+      console.log('Appointment saved successfully!');
+      res.status(200).json({ message: 'Appointment saved successfully' });
+    }
+  });
+}
+
 
 // 
 //
@@ -85,7 +104,7 @@ export const InsertAppointment = (req, res) => {
 //
 export const Appointments = (req, res) =>{
 
-  const q = "SELECT * FROM appointments a INNER JOIN user u ON a.useridnum = u.idnum"
+  const q = "SELECT * FROM appointments"
 
   db.query(q, (error, data) => {
     if (error) {
@@ -94,3 +113,40 @@ export const Appointments = (req, res) =>{
     return res.json(data)
   })
 }
+
+//This function is responsible for counting appointments from database and returning the number of the total appointments!
+//Used in Dashboard.js(Frontend side).
+
+export const CountAppointments = (req, res) => {
+  const q = "SELECT COUNT(*) AS appointmentCount FROM appointments";
+
+  db.query(q, (error, results) => {
+    if (error) {
+      console.error('Error:', error);
+      return;
+    }
+
+    const appointmentCount = results[0].appointmentCount;
+    res.json({ count: appointmentCount });
+  });
+};
+
+
+//
+//
+  export const AddSlots = (req, res) => {
+    const { idnum, datetime, categoryname } = req.body;
+    const q = "Insert INTO timeslots (hour, minutes) VALUES (?,?) ";
+    const values = [idnum ,datetime, categoryname];
+  
+    db.query(query, values, (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Failed to insert time slots' });
+      } else {
+        console.log('Time slot inserted successfully!');
+        // Send a response to the client indicating the success of the operation
+        return res.json({ status: 'success', message: 'Time slot inserted successfully' });
+      }
+    });
+  };

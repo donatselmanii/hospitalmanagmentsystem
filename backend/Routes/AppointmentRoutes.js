@@ -1,6 +1,6 @@
 import express from 'express'
 import cookieParser from 'cookie-parser';
-import { DeleteAppointment, InsertAppointment, VerifyUser} from '../Controllers/AppointmentController.js';
+import { DeleteAppointment, InsertAppointment, VerifyUser, CountAppointments, Appointments} from '../Controllers/AppointmentController.js';
 
 
 const router = express.Router();
@@ -18,5 +18,13 @@ router.delete('/', DeleteAppointment);
 //
 //
 router.get('/', VerifyUser);
+
+//
+//
+router.get('/count', CountAppointments);
+
+//
+//
+router.get('/fetch', Appointments);
 
 export default router

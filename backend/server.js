@@ -1,16 +1,11 @@
 import express from 'express'
 import cors from 'cors'
-import bcrypt from 'bcrypt'
-import session from 'express-session'
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
-
 import ContactFormRoutes from './Routes/ContactFormRoutes.js';
 import UserRoutes from './Routes/UserRoutes.js';
 import AppointmentRoutes from './Routes/AppointmentRoutes.js';
 import CityCategoryRoutes from './Routes/CityCategoryRoutes.js';
 import LoginRoutes from './Routes/LoginRoutes.js';
-import DecodeTokenRoutes from './Routes/DecodeTokenRoutes.js';
+import EpharmRoutes from './Routes/EpharmRoutes.js'
 
 const app = express()
 
@@ -34,7 +29,7 @@ app.use('/users', UserRoutes);
 app.use('/appointments', AppointmentRoutes);
 app.use('/citycategory', CityCategoryRoutes);
 app.use('/login', LoginRoutes);
-app.use('/decode', DecodeTokenRoutes)
+app.use('/epharm', EpharmRoutes);
 
 app.put('/users/:id', (req, res) => {
  const updatedUser = updateUser(req, res)

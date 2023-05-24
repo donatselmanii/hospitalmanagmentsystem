@@ -1,5 +1,5 @@
 import express from 'express'
-import { Login, VerifyUser, Logout }  from '../Controllers/LoginController.js'
+import { Login, VerifyUser, Logout, VerifyUserRole }  from '../Controllers/LoginController.js'
 import cookieParser from 'cookie-parser';
 
 
@@ -30,5 +30,8 @@ router.get('/', VerifyUser);
 //
 router.post('/logout', Logout);
   
+//
+//
+router.get('/rolecheck', VerifyUserRole);
 
 export default router

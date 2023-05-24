@@ -47,6 +47,14 @@ body {
     text-indent: 15px;
     width: 85%;
 }
+.input-field {
+    border: none;
+    background-color: transparent;
+    padding: 5px;
+    font-size: 16px;
+    color: #333;
+  }
+  
 .search button {
     outline: none;
     border: none;
@@ -406,6 +414,124 @@ th {
 .rejected {
     color: #e86786;
 }
+
+.containerDashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 550px;
+    font-size: 0.9em;
+    min-width: 400px;
+    flex-direction: column;
+    gap: 2em;
+    flex-wrap: wrap;
+  }
+  .containerDashboardP tr th {
+    background-color: #5073fb;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .containerDashboardP th,
+  .containerDashboardP td {
+    padding: 12px 15px;
+  }
+  
+  .containerDashboardP tr td {
+    border-bottom: 1px solid #dddddd;
+  }
+  .emriP {
+    width: 30em;
+  }
+  
+  .edito {
+    padding: 0.4em;
+    background-color: #5073fb;
+    border: none;
+    border-radius: 2px;
+  }
+  
+  .fshij {
+    padding: 0.4em;
+    background-color: #e33437;
+    border: none;
+    border-radius: 2px;
+  }
+  
+  .porositP {
+    margin-top: 0.4em;
+    padding: 0.4em;
+    background-color: #c9d51a;
+    border: none;
+    border-radius: 2px;
+  }
+  
+  .containerDashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 5em;
+    margin-top: 2em;
+    gap: 0.6em;
+  }
+  
+  .titulliPershkrim {
+    display: flex;
+    flex-direction: column;
+    color: #5073fb;
+    text-align: center;
+    margin-top: 2em;
+  }
+  
+  .adminNav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    background-color: gray;
+  }
+  
+  .adminNav-links {
+    display: flex;
+    flex-direction: row;
+    gap: 2em;
+  }
+  
+  .adminNav-item .usercarda {
+    font-size: 1em;
+    color: #00113f;
+  }
+  .adminNav-item .usercarda:hover {
+    font-weight: bold;
+  }
+  
+  .buttonusercard {
+    background-color: #5073fb;
+    border: none;
+    box-shadow: 0 0 10px #d3d3d3;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    width: 10em;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .buttonusercard:hover {
+    background-color: #5073fb;
+    color: white;
+  }
+  
+  .test{
+    display: flex;
+    margin-top: 1em;
+    gap: 1em;
+  }
+  
+  
 /* responsive starts here */
 @media screen and (max-width:1350px) {
     .cards,

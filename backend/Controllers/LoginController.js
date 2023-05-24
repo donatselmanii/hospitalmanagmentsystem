@@ -77,10 +77,49 @@ export const VerifyUser = (req,res)=>{
   }
 }
 
+export const VerifyUserRole = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.json({ Error: 'You are not authenticated' });
+  } else {
+    jwt.verify(token, 'jwt-secret-key', (err, decoded) => {
+      if (err) {
+        return res.json({ Error: 'Token is not valid' });
+      } else {
+        const idnum = decoded.idnum;
+        console.log('Decoded token:', decoded);
+        console.log('Decoded idnum:', idnum);
+        req.idnum = idnum;
+        res.locals.idnum = idnum; // Set res.locals.idnum
+        console.log('req.idnum:', req.idnum);
+        console.log('res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+
+        // Query the database to get user role
+        const q = 'SELECT role FROM user WHERE idnum = ?';
+
+        db.query(q, [idnum], (error, results) => {
+          if (error) {
+            return res.json({ Error: 'Failed to fetch user role' });
+          }
+
+          if (results.length === 0) {
+            return res.json({ Error: 'User not found' });
+          }
+
+          const role = results[0].role;
+
+          return res.json({ Status: 'Success', idnum: idnum, role: role });
+        });
+      }
+    });
+  }
+};
+
 //
 //
 export const Logout = (req, res) => {
   // Clear the token cookie
   res.clearCookie('token');
   return res.json({ Status: "Success", message: "Logged out successfully" });
-};
+}

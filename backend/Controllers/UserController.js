@@ -16,6 +16,21 @@ import bcrypt from 'bcrypt'
     })
  }
 
+
+// This function is responsible for selecting 10 recent users with their info from database and showing it to the frontend code
+// Used in: DashboardComponent.js(Frontend side)
+export const RecentUser = (req, res) =>{
+
+  const q = "SELECT * FROM user WHERE role='patient' ORDER BY id DESC LIMIT 6";
+
+  db.query(q, (error, data) => {
+    if (error) {
+      return res.json(error)
+    }
+    return res.json(data)
+  })
+}
+
 // This function is responsible for updating user info
 // Used in: UserList.js(Frontend side)
  export const UpdateUser = (req, res) => {
@@ -81,8 +96,8 @@ export const UserRegister = (req, res) => {
 //This function is responsible for counting users from database and returning the number of the total users!
 //Used in Dashboard.js(Frontend side).
 
-export const countUsers = (req, res) => {
-  const query = "SELECT COUNT(*) AS userCount FROM user";
+export const CountUsers = (req, res) => {
+  const query = "SELECT COUNT(*) AS userCount FROM user WHERE role='patient'";
 
   db.query(query, (error, results) => {
     if (error) {
@@ -92,5 +107,22 @@ export const countUsers = (req, res) => {
 
     const userCount = results[0].userCount;
     res.json({ count: userCount });
+  });
+};
+
+//This function is responsible for counting users from database and returning the number of the total users!
+//Used in Dashboard.js(Frontend side).
+
+export const CountDoctors = (req, res) => {
+  const query = "SELECT COUNT(*) AS doctorCount FROM user WHERE role='doctor'";
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error:', error);
+      return;
+    }
+
+    const doctorCount = results[0].doctorCount;
+    res.json({ doctorcount: doctorCount });
   });
 };
