@@ -1,0 +1,27 @@
+.timeslotcontainer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 500px;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin-left: 0 auto;
+  }
+  
+  .timeslotcontent {
+    width: 60%;
+    margin-bottom: 20px;
+  }
+  
+  .timeslottable {
+    text-align: center;
+  }
+  .time-slot {
+    /* Your regular button styles */
+  }
+  
+  .time-slot.selected {
+    background-color: blue; /* Set your desired color for the selected button */
+    color: white; /* Set the text color for the selected button */
+  }
+  

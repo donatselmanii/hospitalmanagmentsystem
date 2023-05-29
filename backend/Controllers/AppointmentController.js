@@ -1,9 +1,7 @@
 import db from '../Database/db.js'
 import express  from 'express';
 import cookieParser from 'cookie-parser';
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import bodyParser from 'body-parser'
 import cors from 'cors'
 
 const app = express()
@@ -44,35 +42,15 @@ export const VerifyUser = (req,res)=>{
 }
 
 // This function is responsible for inserting appointments in database
-// Used in:ContactForm(Frontend side)
+// Used in:InsertAppointment(Frontend side)
 
 export const InsertAppointment = (req, res) => {
-  const { idnum, datetime, categoryname } = req.body;
-  const query = 'INSERT INTO appointments (idnum, datetime, categoryname) VALUES (?, ?, ?)';
-  const values = [idnum ,datetime, categoryname];
-
-  db.query(query, values, (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).json({ error: 'Failed to insert appointment' });
-    } else {
-      console.log('Appointment inserted successfully!');
-      // Send a response to the client indicating the success of the operation
-      return res.json({ status: 'success', message: 'Appointment inserted successfully' });
-    }
-  });
-};
-
-
-export const InsertAppointmentTest = (req, res) => {
   const { idnum, citycategory, datetime, timeSlot } = req.body;
-  const appointmentDateTime = new Date(`${datetime}T${timeSlot}`).toISOString().slice(0, 19).replace('T', ' ');
 
-  // Define the SQL query
-  const q = 'INSERT INTO appointments (idnum, citycategory, appointment_datetime) VALUES (?, ?, ?)';
+  
+  const q = 'INSERT INTO appointments (idnum, categoryname, appointment_date, timeslot) VALUES (?, ?, ?, ?)';
 
-  // Execute the query
-  db.query(q, [idnum, citycategory, appointmentDateTime], (error, results) => {
+  db.query(q, [idnum, citycategory, datetime, timeSlot], (error, results) => {
     if (error) {
       console.error('Error saving appointment:', error);
       res.status(500).json({ message: 'Error saving appointment' });
@@ -81,7 +59,8 @@ export const InsertAppointmentTest = (req, res) => {
       res.status(200).json({ message: 'Appointment saved successfully' });
     }
   });
-}
+};
+
 
 
 // 
@@ -100,11 +79,39 @@ export const InsertAppointmentTest = (req, res) => {
     })
   }
 
-//
-//
+//This function is responsible for fetching appoitnments from database.
+//Used in AppointmentComponent(frontend side).
 export const Appointments = (req, res) =>{
 
   const q = "SELECT * FROM appointments"
+
+  db.query(q, (error, data) => {
+    if (error) {
+      return res.json(error)
+    }
+    return res.json(data)
+  })
+}
+
+//
+//
+export const PatientAppointments = (req, res) =>{
+  const idnum = req.body;
+  const q = "SELECT * FROM appointments where idnum=?"
+
+  db.query(q, (error, data) => {
+    if (error) {
+      return res.json(error)
+    }
+    return res.json(data)
+  })
+}
+
+//
+//
+export const TimeSlots = (req, res) =>{
+
+  const q = "SELECT * FROM timeslots"
 
   db.query(q, (error, data) => {
     if (error) {
@@ -135,11 +142,11 @@ export const CountAppointments = (req, res) => {
 //
 //
   export const AddSlots = (req, res) => {
-    const { idnum, datetime, categoryname } = req.body;
+    const { hour, minutes } = req.body;
     const q = "Insert INTO timeslots (hour, minutes) VALUES (?,?) ";
-    const values = [idnum ,datetime, categoryname];
+    const values = [hour, minutes];
   
-    db.query(query, values, (error, results) => {
+    db.query(q, values, (error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).json({ error: 'Failed to insert time slots' });

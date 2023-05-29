@@ -6,7 +6,7 @@ import '../../../../css/Dashboardcss/dashboard.css'
 function AppointmentComponent(){
   const [appointments, setAppointments] = useState([]);
   const [totalAppointments, setTotalAppointments] = useState(0);
-  const [editetAppointment, setEditedAppointments] = useState({});
+  const [editedAppointment, setEditedAppointments] = useState({});
   
 
   useEffect(() => {
@@ -62,9 +62,9 @@ function AppointmentComponent(){
                       <input
                         className="input-field"
                         type="text"
-                        placeholder="appointment_datetime"
-                        defaultValue={appointment.appointment_datetime}
-                        onChange={(event) => handleInputChange(event, "appointment_datetime")}
+                        placeholder="appointment_date"
+                        defaultValue={new Date(appointment.appointment_date).toDateString()}
+                        onChange={(event) => handleInputChange(event, "appointment_date")}
                       />
                     </td>
                     <td >
@@ -76,6 +76,15 @@ function AppointmentComponent(){
                         onChange={(event) => handleInputChange(event, "categoryname")}
                       />
                     </td>
+                    <td>
+                    <input
+                      className="input-field"
+                      type="text"
+                      placeholder="timeSlot"
+                      defaultValue={appointment.timeslot} 
+                      onChange={(event) => handleInputChange(event, 'timeSlot')}
+                    />
+                  </td>
                   </tr>
                 ))}
               </tbody>

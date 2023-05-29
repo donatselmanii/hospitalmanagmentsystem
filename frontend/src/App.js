@@ -13,8 +13,8 @@ import AddCategory from './components/component/Admin/AddCategory';
 import Dashboard from './components/component/Admin/Dashboard/Dashboard';
 import AddProduct from './components/component/Admin/Dashboard/AddProduct';
 import AddProductTest from './components/component/Admin/AddProductTest';
-import InsertAppointmentTest from './components/component/User/InsertAppointmentTest';
 import MedicalReport from './components/component/Admin/MedicalReport';
+import TimeSlots from './components/component/Admin/Dashboard/Appointments/TimeSlots';
 
 function App() {
   return (
@@ -36,8 +36,8 @@ function App() {
         <Route path="/AddProduct" element={<AddProduct />} />
         <Route path="/AddProductTest" element={<AddProductTest />} />
         <Route path="/AddCategory" element={<AddCategory />} />
-        <Route path="/Test" element={<InsertAppointmentTest />} />
         <Route path="/Report" element={<MedicalReport />} />
+        <Route path="/TimeSlots" element={<TimeSlots />} />
         </Routes>
       </BrowserRouter>
     </div>
