@@ -1,6 +1,6 @@
 import express from 'express'
 import cookieParser from 'cookie-parser';
-import { DeleteAppointment, InsertAppointment, VerifyUser, CountAppointments, PatientAppointments, Appointments, AddSlots, TimeSlots} from '../Controllers/AppointmentController.js';
+import { DeleteAppointment, InsertAppointment, VerifyUser, CountAppointments, Appointments, AddSlots, TimeSlots, VerifyUserAppointments} from '../Controllers/AppointmentController.js';
 
 
 const router = express.Router();
@@ -21,9 +21,13 @@ router.post('/timeslots', AddSlots);
 //
 router.delete('/', DeleteAppointment);
 
-//
-//
+//This function is responsible for
+//Used in: (Frontend side)
 router.get('/', VerifyUser);
+
+//
+//
+router.get('/userappointments', VerifyUserAppointments);
 
 //
 //
@@ -33,9 +37,7 @@ router.get('/count', CountAppointments);
 //
 router.get('/fetch', Appointments);
 
-//
-//
-router.get('/patientappointments', PatientAppointments);
+
 
 //
 //

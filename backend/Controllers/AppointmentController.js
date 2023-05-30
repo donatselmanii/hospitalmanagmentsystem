@@ -29,17 +29,58 @@ export const VerifyUser = (req,res)=>{
         return res.json({ Error: "Token is not okay!" });
       } else {
         const idnum = decoded.idnum;
-        console.log('Decoded token:', decoded);
-        console.log('Decoded idnum:', idnum);
+        console.log('Verify-User Decoded token:', decoded);
+        console.log('Verify-User Decoded idnum:', idnum);
         req.idnum = idnum;
         res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('req.idnum:', req.idnum);
-        console.log('res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+        console.log('Verify-User req.idnum:', req.idnum);
+        console.log('Verify-User res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
         return res.json({ Status: "Success", idnum: idnum });
       }
     })
   }
 }
+
+//This function is responsible forfetching appointment data for the user.
+//Used in AppointmentPatientComponent.js(Frontend side).
+
+export const VerifyUserAppointments = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.json({ Error: 'You are not authenticated' });
+  } else {
+    jwt.verify(token, 'jwt-secret-key', (err, decoded) => {
+      if (err) {
+        return res.json({ Error: 'Token is not valid' });
+      } else {
+        const idnum = decoded.idnum;
+        console.log('User-Appointments Decoded token:', decoded);
+        console.log('User-Appointments Decoded idnum:', idnum);
+        req.idnum = idnum;
+        res.locals.idnum = idnum; // Set res.locals.idnum
+        console.log('User-Appointments req.idnum:', req.idnum);
+        console.log('User-Appointments res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+
+        // Query the database to get user role and other data
+        const q = 'SELECT * FROM appointments WHERE idnum = ?';
+
+        db.query(q, [idnum], (error, results) => {
+          if (error) {
+            console.log('Error fetching appointments:', error);
+            return res.json({ Error: 'Failed to fetch appointments' });
+          }
+
+          console.log('Appointments:', results); // Log fetched appointments
+
+          return res.json({ Status: 'Successs', appointments: results });
+        });
+      }
+    });
+  }
+};
+
+
 
 // This function is responsible for inserting appointments in database
 // Used in:InsertAppointment(Frontend side)
@@ -93,19 +134,6 @@ export const Appointments = (req, res) =>{
   })
 }
 
-//
-//
-export const PatientAppointments = (req, res) =>{
-  const idnum = req.body;
-  const q = "SELECT * FROM appointments where idnum=?"
-
-  db.query(q, (error, data) => {
-    if (error) {
-      return res.json(error)
-    }
-    return res.json(data)
-  })
-}
 
 //
 //
