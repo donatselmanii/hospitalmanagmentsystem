@@ -56,7 +56,8 @@ function DashboardComponent() {
   }
 
   return (
-    <>
+    <main>
+    <div className="dashboard">
       <div className="main--content">
         <div className="overview">
           <div className="title">
@@ -238,7 +239,8 @@ function DashboardComponent() {
           </div>
         </div>
       </div>
-    </>
+    </div>
+    </main>
   );
 }
 

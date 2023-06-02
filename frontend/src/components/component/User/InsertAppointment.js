@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../../css/Dashboardcss/timeslots.css';
 
 const InsertAppointmentTest = () => {
   const [idnum, setIdnum] = useState('');
@@ -9,6 +8,7 @@ const InsertAppointmentTest = () => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
   const [timeslots, setTimeSlots] = useState([]);
   const [cityCategories, setCityCategories] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleCitySelect = (event) => {
     setSelectedCity(event.target.value);
@@ -25,57 +25,77 @@ const InsertAppointmentTest = () => {
   const handleSubmit = async () => {
     if (selectedTimeSlot) {
       try {
-       
         const appointmentData = {
-          idnum: idnum, 
-          citycategory: selectedCity, 
-          datetime: selectedDate,
-          timeSlot: selectedTimeSlot,
+          idnum: idnum,
+          categoryname: selectedCity,
+          appointmentDate: selectedDate,
+          timeslot: selectedTimeSlot
         };
-  
-        await axios.post('http://localhost:8081/appointments', appointmentData);
-  
-        // Reset the form values
-        setSelectedCity('');
-        setSelectedDate('');
-        setSelectedTimeSlot('');
-  
-        
-        console.log('Appointment successfully booked!');
+
+        const response = await axios.post('http://localhost:8081/appointments/test', appointmentData);
+
+        if (response.data.message === 'Maximum appointments limit reached for the specified date.') {
+          setErrorMessage('Maximum appointments limit reached for the specified date.');
+        } else if (response.data.message === 'No available doctor found in the specified city category.') {
+          setErrorMessage('No available doctor found in the specified city category.');
+        } else {
+          // Reset the form values
+          setSelectedCity('');
+          setSelectedDate('');
+          setSelectedTimeSlot('');
+
+          setErrorMessage('Appointment successfully booked!');
+        }
       } catch (error) {
-        
         console.error('Error booking appointment:', error);
+
+        if (error.response && error.response.status === 409) {
+          setErrorMessage('Maximum appointments limit reached for the specified date.');
+        } else if (error.response && error.response.status === 404) {
+          setErrorMessage('No available doctor found in the specified city category.');
+        } else {
+          setErrorMessage('Error booking appointment');
+        }
       }
     } else {
-      console.warn('Please select a time slot before submitting the appointment.');
+      setErrorMessage('Please select a time slot before submitting the appointment.');
     }
   };
-  
 
   useEffect(() => {
-    axios.get('http://localhost:8081/login', { withCredentials: true }).then(res => {
-      if (res.data.Status === 'Success') {
-        setIdnum(res.data.idnum);
-        console.log("Okay")
-      } else {
-        console.log("Not okay")
-      }
-    }).catch(err => console.log(err))
+    axios
+      .get('http://localhost:8081/login', { withCredentials: true })
+      .then((res) => {
+        if (res.data.Status === 'Success') {
+          setIdnum(res.data.idnum);
+          console.log('Okay');
+        } else {
+          console.log('Not okay');
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
-  
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get('http://localhost:8081/appointments/fetchtimeslots');
-      setTimeSlots(response.data);
+      try {
+        const response = await axios.get('http://localhost:8081/appointments/fetchtimeslots');
+        setTimeSlots(response.data);
+      } catch (error) {
+        console.error('Error fetching time slots:', error);
+      }
     }
     fetchData();
   }, []);
 
   useEffect(() => {
     async function fetchCityCategories() {
-      const response = await axios.get('http://localhost:8081/citycategory');
-      setCityCategories(response.data);
+      try {
+        const response = await axios.get('http://localhost:8081/citycategory');
+        setCityCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching city categories:', error);
+      }
     }
     fetchCityCategories();
   }, []);
@@ -83,6 +103,7 @@ const InsertAppointmentTest = () => {
   return (
     <div className="appointment-form">
       <h2>Make an Appointment</h2>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       <div className="form-group">
         <label htmlFor="city">City:</label>
         <select id="city" value={selectedCity} onChange={handleCitySelect}>
@@ -101,7 +122,7 @@ const InsertAppointmentTest = () => {
       <div className="form-group">
         <label htmlFor="timeSlot">Time Slot:</label>
         <div className="time-slots-container">
-        {timeslots.map((timeslot) => (
+          {timeslots.map((timeslot) => (
             <div key={timeslot.id}>
               <button
                 className={`time-slot ${selectedTimeSlot === timeslot.id ? 'selected' : ''}`}
@@ -111,10 +132,11 @@ const InsertAppointmentTest = () => {
               </button>
             </div>
           ))}
-
         </div>
       </div>
-      <button type="button" onClick={handleSubmit}>Book Appointment</button>
+      <button type="button" onClick={handleSubmit}>
+        Book Appointment
+      </button>
     </div>
   );
 };

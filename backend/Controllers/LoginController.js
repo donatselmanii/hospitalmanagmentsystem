@@ -65,18 +65,20 @@ export const VerifyUser = (req,res)=>{
         return res.json({ Error: "Token is not okay!" });
       } else {
         const idnum = decoded.idnum;
-        console.log('Decoded token:', decoded);
-        console.log('Decoded idnum:', idnum);
+        console.log('Login Decoded token:', decoded);
+        console.log('Login Decoded idnum:', idnum);
         req.idnum = idnum;
         res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('req.idnum:', req.idnum);
-        console.log('res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+        console.log('Login req.idnum:', req.idnum);
+        console.log('Login res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
         return res.json({ Status: "Success", idnum: idnum });
       }
     })
   }
 }
 
+//
+//
 export const VerifyUserRole = (req, res) => {
   const token = req.cookies.token;
 

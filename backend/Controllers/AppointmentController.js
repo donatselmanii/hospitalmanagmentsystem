@@ -185,3 +185,87 @@ export const CountAppointments = (req, res) => {
       }
     });
   };
+
+
+  //
+  //
+
+  export const InsertAppointmentTest = async (req, res) => {
+    try {
+      const { idnum, appointmentDate, timeslot, categoryname } = req.body;
+  
+      // Get the doctor with the minimum appointments count from the specific city
+      const selectDoctorQuery = `
+        SELECT id
+        FROM doctors
+        WHERE city = ? AND appointments_count = (
+          SELECT MIN(appointments_count)
+          FROM doctors
+          WHERE city = ?
+        )
+        LIMIT 1;
+      `;
+      const [doctorResult] = await executeQuery(selectDoctorQuery, [categoryname, categoryname]);
+  
+      if (doctorResult) {
+        const doctorId = doctorResult.id;
+  
+        // Check if the doctor has already reached the maximum appointments limit for the specified date
+        const countAppointmentsQuery = `
+          SELECT COUNT(*) AS appointmentsCount
+          FROM appointments
+          WHERE doctor_id = ? AND appointment_date = ?;
+        `;
+        const countAppointmentsValues = [doctorId, appointmentDate];
+        const [countResult] = await executeQuery(countAppointmentsQuery, countAppointmentsValues);
+  
+        const appointmentsCount = countResult.appointmentsCount;
+        const maxAppointmentsPerDay = 10;
+  
+        if (appointmentsCount >= maxAppointmentsPerDay) {
+          return res.status(400).json({ message: 'Maximum appointments limit reached for the specified date.' });
+        }
+  
+        // Update the appointments count for the selected doctor
+        const updateQuery = `
+          UPDATE doctors
+          SET appointments_count = appointments_count + 1
+          WHERE id = ?;
+        `;
+        await executeQuery(updateQuery, [doctorId]);
+  
+        // Insert the appointment
+        const insertQuery = `
+          INSERT INTO appointments (doctor_id, idnum, appointment_date, timeslot, categoryname)
+          VALUES (?, ?, ?, ?, ?);
+        `;
+        const insertValues = [doctorId, idnum, appointmentDate, timeslot, categoryname];
+        await executeQuery(insertQuery, insertValues);
+  
+        res.status(200).json({ message: 'Appointment successfully booked!' });
+      } else {
+        res.status(404).json({ message: 'No available doctor found in the specified city category.' });
+      }
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      res.status(500).json({ message: 'Error booking appointment' });
+    }
+  };
+  
+  
+  
+  const executeQuery = (query, values) => {
+    return new Promise((resolve, reject) => {
+      db.query(query, values, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  };
+  
+  
+  
+ 

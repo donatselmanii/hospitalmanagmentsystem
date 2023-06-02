@@ -1,6 +1,6 @@
 import express from 'express'
 import cookieParser from 'cookie-parser';
-import { DeleteAppointment, InsertAppointment, VerifyUser, CountAppointments, Appointments, AddSlots, TimeSlots, VerifyUserAppointments} from '../Controllers/AppointmentController.js';
+import { DeleteAppointment, InsertAppointment, InsertAppointmentTest, VerifyUser, CountAppointments, Appointments, AddSlots, TimeSlots, VerifyUserAppointments} from '../Controllers/AppointmentController.js';
 
 
 const router = express.Router();
@@ -11,7 +11,7 @@ router.use(cookieParser());
 // Used in:InsertAppointment(Frontend side)
 router.post('/', InsertAppointment);
 
-
+router.post('/test', InsertAppointmentTest);
 
 //
 //

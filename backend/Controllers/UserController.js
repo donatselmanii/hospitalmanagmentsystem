@@ -33,20 +33,27 @@ export const RecentUser = (req, res) =>{
 
 // This function is responsible for updating user info
 // Used in: UserList.js(Frontend side)
- export const UpdateUser = (req, res) => {
+export const UpdateUser = (req, res) => {
+  const { id } = req.params;
+  const { idnum, name, surname, phone, email, password, role } = req.body;
 
-    const { id, idnum, name, surname, phone, email, password, role} = req.body;
-    const q = `UPDATE user SET idnum=?, name=?, surname=?, phone=?, email=?, password=?, role=? WHERE id=?`;
-    const values = [idnum, name, surname, phone, email, password, role, id]
+  const q = `UPDATE user SET idnum=?, name=?, surname=?, phone=?, email=?, password=?, role=? WHERE id=?`;
+  console.log("ID: ", id, "role: ", role, "name: ", name)
+  const values = [idnum, name, surname, phone, email, password, role, id];
 
-    db.query(q, values, (error, results) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(`User with ID ${id} updated successfully`);
-      }
-    });
-   }
+  db.query(q, values, (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to update user' });
+    } else {
+      console.log(`User with ID ${id} updated successfully`);
+      res.status(200).json({ message: 'User updated successfully' });
+    }
+  });
+};
+
+
+
 
 // This function is responsible for deleting users from database
 // Used in: UserList.js(Frontend side)
