@@ -1,5 +1,5 @@
 import express from 'express'
-import { User, RecentUser, UpdateUser, DeleteUser, UserRegister, CountUsers, CountDoctors }  from '../Controllers/UserController.js'
+import { User, GetUser, RecentUser, UpdateUser, DeleteUser, UserRegister, CountUsers, CountDoctors, SendEmail }  from '../Controllers/UserController.js'
 
 
 const router = express.Router();
@@ -7,6 +7,10 @@ const router = express.Router();
 // This route is responsible about selecting user info from database
 // Used in: UserList.js(Frontend side)
 router.get('/', User);
+
+// This route is responsible about selecting user info where id = ? from database
+// Used in: SendEmail.js(Frontend side)
+router.get('/:id', GetUser);
 
 // This route is responsible about selecting user info from database
 // Used in: UserList.js(Frontend side)
@@ -23,6 +27,10 @@ router.delete('/:id', DeleteUser);
 //This route is responsible for user registration
 // Used in: Register.js(Frontend side)
 router.post('/', UserRegister);
+
+//This route is responsible for sending emails to the users
+//Used in: SendEmail.js(Frontend side)
+router.post('/send-email', SendEmail);
 
 // This route is responsible about counting how many users are in database.
 // Used in: Dashboard.js(Frontend side)

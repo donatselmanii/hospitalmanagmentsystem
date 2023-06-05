@@ -1,5 +1,7 @@
 import db from '../Database/db.js'
 import bcrypt from 'bcrypt'
+import bodyParser from "body-parser";
+import nodemailer from "nodemailer";
 
 
 // This function is responsible for selecting user info from database and showing it to the frontend code
@@ -133,3 +135,57 @@ export const CountDoctors = (req, res) => {
     res.json({ doctorcount: doctorCount });
   });
 };
+
+//
+//
+export const GetUser = (req, res) => {
+  const { id } = req.params;
+
+  const q = `SELECT * FROM user WHERE id = ${id}`;
+
+  db.query(q, (error, data) => {
+    if (error) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    if (data.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const user = data[0];
+    return res.json(user);
+  });
+}
+
+//
+//
+export const SendEmail = (req, res) => {
+  const { recipient, subject, message } = req.body;
+
+  const transporter = nodemailer.createTransport({
+
+      service: "hotmail",
+      auth: {
+        user: "donatselmanii@hotmail.com",
+        pass: "authoctonus123",
+      },
+
+  });
+
+  const mailOptions = {
+    from: "donatselmanii@hotmail.com", // Replace with your email address
+    to: recipient,
+    subject: subject,
+    text: message,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Failed to send email" });
+    }
+
+    console.log("Email sent:", info.response);
+    return res.json({ success: true });
+  });
+}

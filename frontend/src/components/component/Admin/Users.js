@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../../css/largedevices/Users.css";
+import { Link, useNavigate } from "react-router-dom";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [editedUsers, setEditedUsers] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -29,7 +30,7 @@ function Users() {
       const editedUser = editedUsers[id];
       const updatedUser = {
         ...user,
-        ...editedUser
+        ...editedUser,
       };
       await axios.put(`http://localhost:8081/users/${id}`, updatedUser);
       setUsers((prevUsers) =>
@@ -40,7 +41,6 @@ function Users() {
       console.log(error);
     }
   }
-  
 
   function handleInputChange(event, userId, key) {
     const { value } = event.target;
@@ -62,7 +62,10 @@ function Users() {
       },
     }));
   }
-  
+
+  function handleSendEmail(userId) {
+    navigate(`/email/${userId}`);
+  }
 
   return (
     <>
@@ -96,7 +99,9 @@ function Users() {
                   type="text"
                   placeholder="ID Number"
                   value={editedUsers[user.id]?.idnum || user.idnum}
-                  onChange={(event) => handleInputChange(event, user.id, "idnum")}
+                  onChange={(event) =>
+                    handleInputChange(event, user.id, "idnum")
+                  }
                 />
               </td>
               <td className="adminPagetable">
@@ -104,7 +109,9 @@ function Users() {
                   type="text"
                   placeholder="Name"
                   value={editedUsers[user.id]?.name || user.name}
-                  onChange={(event) => handleInputChange(event, user.id, "name")}
+                  onChange={(event) =>
+                    handleInputChange(event, user.id, "name")
+                  }
                 />
               </td>
               <td className="adminPagetable">
@@ -112,7 +119,9 @@ function Users() {
                   type="text"
                   placeholder="Surname"
                   value={editedUsers[user.id]?.surname || user.surname}
-                  onChange={(event) => handleInputChange(event, user.id, "surname")}
+                  onChange={(event) =>
+                    handleInputChange(event, user.id, "surname")
+                  }
                 />
               </td>
               <td className="adminPagetable">
@@ -120,7 +129,9 @@ function Users() {
                   type="text"
                   placeholder="Phone"
                   value={editedUsers[user.id]?.phone || user.phone}
-                  onChange={(event) => handleInputChange(event, user.id, "phone")}
+                  onChange={(event) =>
+                    handleInputChange(event, user.id, "phone")
+                  }
                 />
               </td>
               <td className="adminPagetable">
@@ -128,7 +139,9 @@ function Users() {
                   type="text"
                   placeholder="Email"
                   value={editedUsers[user.id]?.email || user.email}
-                  onChange={(event) => handleInputChange(event, user.id, "email")}
+                  onChange={(event) =>
+                    handleInputChange(event, user.id, "email")
+                  }
                 />
               </td>
               <td className="adminPagetable">
@@ -136,12 +149,15 @@ function Users() {
                   type="text"
                   placeholder="Role"
                   value={editedUsers[user.id]?.role || user.role}
-                  onChange={(event) => handleInputChange(event, user.id, "role")}
+                  onChange={(event) =>
+                    handleInputChange(event, user.id, "role")
+                  }
                 />
               </td>
               <td className="adminPagetable">
                 <button onClick={() => deleteUser(user.id)}>Delete</button>
                 <button onClick={() => editUser(user.id, user)}>Edit</button>
+                <button onClick={() => handleSendEmail(user.id)}>Send Email</button>
               </td>
             </tr>
           ))}
