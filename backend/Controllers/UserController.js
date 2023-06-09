@@ -166,14 +166,14 @@ export const SendEmail = (req, res) => {
 
       service: "hotmail",
       auth: {
-        user: "donatselmanii@hotmail.com",
-        pass: "authoctonus123",
+        user: "",
+        pass: "",
       },
 
   });
 
   const mailOptions = {
-    from: "donatselmanii@hotmail.com", // Replace with your email address
+    from: "", 
     to: recipient,
     subject: subject,
     text: message,

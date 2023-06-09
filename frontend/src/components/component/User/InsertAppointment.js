@@ -9,6 +9,20 @@ const InsertAppointmentTest = () => {
   const [timeslots, setTimeSlots] = useState([]);
   const [cityCategories, setCityCategories] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    async function fetchUserRole() {
+      try {
+        const response = await axios.get('http://localhost:8081/login/rolecheck', { withCredentials: true });
+        const { email } = response.data;
+        setUserEmail(email);
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      }
+    }
+    fetchUserRole();
+  }, []);
 
   const handleCitySelect = (event) => {
     setSelectedCity(event.target.value);
@@ -29,7 +43,7 @@ const InsertAppointmentTest = () => {
           idnum: idnum,
           categoryname: selectedCity,
           appointmentDate: selectedDate,
-          timeslot: selectedTimeSlot
+          timeslot: selectedTimeSlot,
         };
 
         const response = await axios.post('http://localhost:8081/appointments/test', appointmentData);
@@ -39,7 +53,15 @@ const InsertAppointmentTest = () => {
         } else if (response.data.message === 'No available doctor found in the specified city category.') {
           setErrorMessage('No available doctor found in the specified city category.');
         } else {
-          // Reset the form values
+          // Send email to the user
+          const emailData = {
+            recipient: userEmail, // Use the user's email from state
+            subject: 'Appointment Confirmation',
+            message: `Dear User,\n\nYour appointment has been booked successfully.\n\nAppointment Details:\nDate: ${selectedDate}\nTime Slot: ${selectedTimeSlot}\n\nThank you for choosing our service!\n\nBest regards,\nThe Appointment Team`,
+          };
+          
+          await axios.post('http://localhost:8081/users/send-email', emailData);
+
           setSelectedCity('');
           setSelectedDate('');
           setSelectedTimeSlot('');
@@ -61,20 +83,6 @@ const InsertAppointmentTest = () => {
       setErrorMessage('Please select a time slot before submitting the appointment.');
     }
   };
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:8081/login', { withCredentials: true })
-      .then((res) => {
-        if (res.data.Status === 'Success') {
-          setIdnum(res.data.idnum);
-          console.log('Okay');
-        } else {
-          console.log('Not okay');
-        }
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   useEffect(() => {
     async function fetchData() {
