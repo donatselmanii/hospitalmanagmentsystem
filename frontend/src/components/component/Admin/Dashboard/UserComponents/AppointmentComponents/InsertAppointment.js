@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const InsertAppointmentTest = () => {
+const InsertAppointment = () => {
   const [idnum, setIdnum] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
@@ -10,17 +10,20 @@ const InsertAppointmentTest = () => {
   const [cityCategories, setCityCategories] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [patientName, setPatientName] = useState('');
 
   useEffect(() => {
     async function fetchUserRole() {
       try {
         const response = await axios.get('http://localhost:8081/login/rolecheck', { withCredentials: true });
-        const { email } = response.data;
+        const { email, name } = response.data;
         setUserEmail(email);
+        setPatientName(name);
       } catch (error) {
         console.error('Error fetching user role:', error);
       }
     }
+    
     fetchUserRole();
   }, []);
 
@@ -39,6 +42,9 @@ const InsertAppointmentTest = () => {
   const handleSubmit = async () => {
     if (selectedTimeSlot) {
       try {
+        // Find the selected time slot object
+        const selectedTimeSlotObj = timeslots.find((timeslot) => timeslot.id === selectedTimeSlot);
+
         const appointmentData = {
           idnum: idnum,
           categoryname: selectedCity,
@@ -57,9 +63,12 @@ const InsertAppointmentTest = () => {
           const emailData = {
             recipient: userEmail, // Use the user's email from state
             subject: 'Appointment Confirmation',
-            message: `Dear User,\n\nYour appointment has been booked successfully.\n\nAppointment Details:\nDate: ${selectedDate}\nTime Slot: ${selectedTimeSlot}\n\nThank you for choosing our service!\n\nBest regards,\nThe Appointment Team`,
+            message: `Dear ${patientName},\n\nYour appointment has been booked successfully.\n\nAppointment Details: \nCity:${selectedCity},\nDate: ${selectedDate},\nTime: ${selectedTimeSlotObj.hour
+              .toString()
+              .padStart(2, '0')}:${selectedTimeSlotObj.minutes.toString().padStart(2, '0')}.\n\nThank you for choosing our service!\n\nBest regards,\nThe Appointment Team`,
           };
           
+
           await axios.post('http://localhost:8081/users/send-email', emailData);
 
           setSelectedCity('');
@@ -149,4 +158,4 @@ const InsertAppointmentTest = () => {
   );
 };
 
-export default InsertAppointmentTest;
+export default InsertAppointment;

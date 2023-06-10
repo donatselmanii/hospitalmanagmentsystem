@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../../../css/largedevices/Category.css'
+import '../../../../../../css/largedevices/Category.css'
 import axios from 'axios';
 
 function AddCategory() {

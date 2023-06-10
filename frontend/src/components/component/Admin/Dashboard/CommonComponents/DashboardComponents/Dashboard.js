@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DashboardComponent from './DashboardComponent';
-import StaffComponent from './StaffComponent';
-import PatientComponent from './PatientComponent';
-import EpharmComponent from './EpharmComponent';
-import AppointmentComponent from './AppointmentComponent';
-import TimeSlots from './Appointments/TimeSlots'
-import ManageAppointmentsComponent from './Appointments/ManageAppointmentsComponent'
-import AppointmentPatientComponent from './Appointments/AppointmentPatientComponent'
-import UserCardComponent from './Card/UserCardComponent'
-import '../../../../css/Dashboardcss/dashboard.css';
+import StaffComponent from '../../AdminComponents/StaffComponents/StaffComponent';
+import PatientComponent from '../../PatientComponent';
+import EpharmComponent from '../EPharmComponents/EpharmComponent';
+import AppointmentComponent from '../../AdminComponents/AppointmentComponents/AppointmentComponent';
+import TimeSlots from '../../AdminComponents/AppointmentComponents/TimeSlots'
+import ManageAppointmentsComponent from '../../AdminComponents/AppointmentComponents/ManageAppointmentsComponent'
+import UserCardComponent from '../Card/UserCardComponent'
+import AppointmentPatientComponent from '../../UserComponents/AppointmentComponents/AppointmentPatientComponent'
+import InsertAppointment from '../../UserComponents/AppointmentComponents/InsertAppointment';
+import ContactForm from '../../UserComponents/FeedBackComponents/ContactForm';
+import '../../../../../../css/Dashboardcss/dashboard.css'
 
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState('usercard');
@@ -104,13 +106,18 @@ function Dashboard() {
       return (
         <ul>
           <li>
-            <a href="#" onClick={() => handleNestedItemClick('TimeSlots')}>
-              Time Slots
+            <a href="#" onClick={() => handleNestedItemClick('InsertAppointment')}>
+              Insert Appointment 
             </a>
           </li>
           <li>
             <a href="#" onClick={() => handleNestedItemClick('ManageAppointments')}>
               Manage Appointments
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleNestedItemClick('ContactForm')}>
+              FeedBack 
             </a>
           </li>
         </ul>
@@ -148,6 +155,12 @@ function Dashboard() {
       break;
     case 'ManageAppointments':
       contentComponent = < ManageAppointmentsComponent/>;
+      break; 
+    case 'InsertAppointment':
+      contentComponent = < InsertAppointment/>;
+      break;
+    case 'ContactForm':
+      contentComponent = < ContactForm/>;
       break;
     default:
       contentComponent = null;

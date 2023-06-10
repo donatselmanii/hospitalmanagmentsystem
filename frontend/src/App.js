@@ -5,17 +5,17 @@ import Main from './components/component/Main';
 import Login from './components/Login';
 import Register from './components/Register';
 import Patientpage from './components/component/Patientpage';
-import ContactForm from './components/component/User/ContactForm';
-import Users from './components/component/Admin/Users';
-import AdminMessages from './components/component/Admin/AdminMessages';
-import InsertAppointment from './components/component/User/InsertAppointment';
-import AddCategory from './components/component/Admin/AddCategory';
-import Dashboard from './components/component/Admin/Dashboard/Dashboard';
-import AddProduct from './components/component/Admin/Dashboard/AddProduct';
+import ContactForm from './components/component/Admin/Dashboard/UserComponents/FeedBackComponents/ContactForm';
+import Users from './components/component/Admin/Dashboard/AdminComponents/UserManagmentComponents/Users';
+import AdminMessages from './components/component/Admin/Dashboard/AdminComponents/FeedBackMessagesComponents/AdminMessages';
+import InsertAppointment from './components/component/Admin/Dashboard/UserComponents/AppointmentComponents/InsertAppointment';
+import AddCategory from './components/component/Admin/Dashboard/AdminComponents/CategoryComponents/AddCategory';
+import Dashboard from './components/component/Admin/Dashboard/CommonComponents/DashboardComponents/Dashboard';
+import AddProduct from './components/component/Admin/Dashboard/AdminComponents/EPharmComponents/AddProduct';
 import AddProductTest from './components/component/Admin/AddProductTest';
 import MedicalReport from './components/component/Admin/MedicalReport';
-import TimeSlots from './components/component/Admin/Dashboard/Appointments/TimeSlots';
-import SendEmail from './components/component/Admin/Dashboard/Appointments/SendEmail';
+import TimeSlots from './components/component/Admin/Dashboard/AdminComponents/AppointmentComponents/TimeSlots';
+import SendEmail from './components/component/Admin/Dashboard/AdminComponents/SendEmail';
 
 function App() {
   return (
