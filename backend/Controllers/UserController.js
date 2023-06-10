@@ -102,6 +102,7 @@ export const UserRegister = (req, res) => {
     });
 }
 
+
 //This function is responsible for counting users from database and returning the number of the total users!
 //Used in Dashboard.js(Frontend side).
 
@@ -166,14 +167,14 @@ export const SendEmail = (req, res) => {
 
       service: "hotmail",
       auth: {
-        user: "",
-        pass: "",
+        user: "labcourse1@hotmail.com",
+        pass: "UBTLABCOURSEE1",
       },
 
   });
 
   const mailOptions = {
-    from: "", 
+    from: "labcourse1@hotmail.com", 
     to: recipient,
     subject: subject,
     text: message,

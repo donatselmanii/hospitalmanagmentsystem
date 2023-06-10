@@ -9,9 +9,9 @@ router.use(cookieParser());
 
 // This function is responsible for inserting appointments in database
 // Used in:InsertAppointment(Frontend side)
-router.post('/', InsertAppointment);
+router.post('/', InsertAppointmentTest);
 
-router.post('/test', InsertAppointmentTest);
+router.post('/test', InsertAppointment);
 
 //
 //

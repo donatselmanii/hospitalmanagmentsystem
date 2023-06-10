@@ -85,7 +85,7 @@ export const VerifyUserAppointments = (req, res) => {
 // This function is responsible for inserting appointments in database
 // Used in:InsertAppointment(Frontend side)
 
-export const InsertAppointment = (req, res) => {
+export const InsertAppointmentTest = (req, res) => {
   const { idnum, citycategory, datetime, timeSlot } = req.body;
 
   
@@ -190,18 +190,18 @@ export const CountAppointments = (req, res) => {
   //
   //
 
-  export const InsertAppointmentTest = async (req, res) => {
+  export const InsertAppointment = async (req, res) => {
     try {
       const { idnum, appointmentDate, timeslot, categoryname } = req.body;
   
       // Get the doctor with the minimum appointments count from the specific city
       const selectDoctorQuery = `
         SELECT id
-        FROM doctors
-        WHERE city = ? AND appointments_count = (
+        FROM user
+        WHERE city = ? AND role = 'doctor' AND appointments_count = (
           SELECT MIN(appointments_count)
-          FROM doctors
-          WHERE city = ?
+          FROM user
+          WHERE city = ? AND role = 'doctor'
         )
         LIMIT 1;
       `;
@@ -228,7 +228,7 @@ export const CountAppointments = (req, res) => {
   
         // Update the appointments count for the selected doctor
         const updateQuery = `
-          UPDATE doctors
+          UPDATE user
           SET appointments_count = appointments_count + 1
           WHERE id = ?;
         `;
@@ -251,6 +251,7 @@ export const CountAppointments = (req, res) => {
       res.status(500).json({ message: 'Error booking appointment' });
     }
   };
+  
   
   
   

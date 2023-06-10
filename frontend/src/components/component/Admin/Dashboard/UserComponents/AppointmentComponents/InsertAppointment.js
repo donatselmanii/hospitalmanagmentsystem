@@ -16,7 +16,8 @@ const InsertAppointment = () => {
     async function fetchUserRole() {
       try {
         const response = await axios.get('http://localhost:8081/login/rolecheck', { withCredentials: true });
-        const { email, name } = response.data;
+        const { idnum, email, name } = response.data;
+        setIdnum(idnum)
         setUserEmail(email);
         setPatientName(name);
       } catch (error) {
