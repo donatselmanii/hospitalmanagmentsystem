@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DashboardComponent from './DashboardComponent';
 import StaffComponent from '../../AdminComponents/StaffComponents/StaffComponent';
-import PatientComponent from '../../PatientComponent';
+import PatientComponent from '../../AdminComponents/PatientComponent';
 import EpharmComponent from '../EPharmComponents/EpharmComponent';
 import AppointmentComponent from '../../AdminComponents/AppointmentComponents/AppointmentComponent';
 import TimeSlots from '../../AdminComponents/AppointmentComponents/TimeSlots'
@@ -12,7 +12,7 @@ import UserCardComponent from '../Card/UserCardComponent'
 import AppointmentPatientComponent from '../../UserComponents/AppointmentComponents/AppointmentPatientComponent'
 import InsertAppointment from '../../UserComponents/AppointmentComponents/InsertAppointment';
 import ContactForm from '../../UserComponents/FeedBackComponents/ContactForm';
-import '../../../../../../css/Dashboardcss/dashboard.css'
+import '../../../../css/Dashboardcss/dashboard.css'
 
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState('usercard');

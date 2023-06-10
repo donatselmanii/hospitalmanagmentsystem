@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../../../../../../css/largedevices/Category.css'
 import axios from 'axios';
+import '../../../../css/largedevices/Category.css'
 
 function AddCategory() {
     const[CategoryNameReg, setCategoryNameReg] = useState("");

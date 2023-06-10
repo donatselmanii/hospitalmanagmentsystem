@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../../../../../css/Dashboardcss/timeslots.css';
-import '../../../../../../css/Dashboardcss/dashboard.css'
+import '../../../../css/Dashboardcss/timeslots.css';
+import '../../../../css/Dashboardcss/dashboard.css'
 
 const TimeSlots = () => {
   const [hour, setHour] = useState('');
