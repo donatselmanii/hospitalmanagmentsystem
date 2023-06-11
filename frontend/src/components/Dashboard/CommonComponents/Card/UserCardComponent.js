@@ -50,9 +50,6 @@ function UserCardComponent() {
               <button className="buttonusercard">Change password</button>
             </a>
           </div>
-          <a className="usercarda" href="">
-            <button className="buttonusercard">Your appointments</button>
-          </a>
         </div>
       ) : (
         <p>Loading...</p>

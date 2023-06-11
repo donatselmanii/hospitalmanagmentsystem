@@ -62,12 +62,13 @@ const InsertAppointment = () => {
         } else {
           // Send email to the user
           const emailData = {
-            recipient: userEmail, // Use the user's email from state
+            recipient: userEmail,
             subject: 'Appointment Confirmation',
-            message: `Dear ${patientName},\n\nYour appointment has been booked successfully.\n\nAppointment Details: \nCity:${selectedCity},\nDate: ${selectedDate},\nTime: ${selectedTimeSlotObj.hour
+            message: `Dear ${patientName},\n\nYour appointment has been booked successfully.\n\nAppointment Details: \nCity: ${selectedCity},\nDate: ${selectedDate},\nTime: ${selectedTimeSlotObj.hour
               .toString()
-              .padStart(2, '0')}:${selectedTimeSlotObj.minutes.toString().padStart(2, '0')}.\n\nThank you for choosing our service!\n\nBest regards,\nThe Appointment Team`,
+              .padStart(2, '0')}:${selectedTimeSlotObj.minutes.toString().padStart(2, '0')}.\n\nThank you for choosing our service! 💊\n\nBest regards,\nThe Appointment Team`,
           };
+          
           
 
           await axios.post('http://localhost:8081/users/send-email', emailData);
