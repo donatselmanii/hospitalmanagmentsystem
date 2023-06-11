@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../../../../css/Appointment/InsertAppointment.css'
 
 const InsertAppointment = () => {
   const [idnum, setIdnum] = useState('');
@@ -46,11 +47,13 @@ const InsertAppointment = () => {
         // Find the selected time slot object
         const selectedTimeSlotObj = timeslots.find((timeslot) => timeslot.id === selectedTimeSlot);
 
+        
         const appointmentData = {
           idnum: idnum,
           categoryname: selectedCity,
           appointmentDate: selectedDate,
           timeslot: selectedTimeSlot,
+          appointmentTime: `${selectedTimeSlotObj.hour.toString().padStart(2, '0')}:${selectedTimeSlotObj.minutes.toString().padStart(2, '0')}:00`,  
         };
 
         const response = await axios.post('http://localhost:8081/appointments/test', appointmentData);
@@ -120,11 +123,11 @@ const InsertAppointment = () => {
   }, []);
 
   return (
-    <div className="appointment-form">
-      <h2>Make an Appointment</h2>
+    <div className="insertappointment-form">
+      <h2 className='insertappointment-h2'>Make an Appointment</h2>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
-      <div className="form-group">
-        <label htmlFor="city">City:</label>
+      <div className='insertappointment-form-group'>
+        <label className='insertappointment-label' htmlFor="city">City:</label>
         <select id="city" value={selectedCity} onChange={handleCitySelect}>
           <option value="">Select City</option>
           {cityCategories.map((cityCategory) => (
@@ -134,11 +137,11 @@ const InsertAppointment = () => {
           ))}
         </select>
       </div>
-      <div className="form-group">
+      <div className='insertappointment-form-group'>
         <label htmlFor="date">Date:</label>
-        <input type="date" id="date" value={selectedDate} onChange={handleDateSelect} />
+        <input className='insertappointment-input' type="date" id="date" value={selectedDate} onChange={handleDateSelect} />
       </div>
-      <div className="form-group">
+      <div className='insertappointment-form-group'>
         <label htmlFor="timeSlot">Time Slot:</label>
         <div className="time-slots-container">
           {timeslots.map((timeslot) => (
@@ -153,7 +156,7 @@ const InsertAppointment = () => {
           ))}
         </div>
       </div>
-      <button type="button" onClick={handleSubmit}>
+      <button className='insertappointment-button' type="button" onClick={handleSubmit}>
         Book Appointment
       </button>
     </div>

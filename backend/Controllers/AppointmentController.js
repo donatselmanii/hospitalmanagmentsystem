@@ -80,6 +80,77 @@ export const VerifyUserAppointments = (req, res) => {
   }
 };
 
+export const CompletedAppointments = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.json({ Error: 'You are not authenticated' });
+  } else {
+    jwt.verify(token, 'jwt-secret-key', (err, decoded) => {
+      if (err) {
+        return res.json({ Error: 'Token is not valid' });
+      } else {
+        const idnum = decoded.idnum;
+        console.log('User-Appointments Decoded token:', decoded);
+        console.log('User-Appointments Decoded idnum:', idnum);
+        req.idnum = idnum;
+        res.locals.idnum = idnum; // Set res.locals.idnum
+        console.log('User-Appointments req.idnum:', req.idnum);
+        console.log('User-Appointments res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+
+        // Query the database to get user role and other data
+        const q = 'SELECT * FROM appointments WHERE idnum = ? and status like "completed" ';
+
+        db.query(q, [idnum], (error, results) => {
+          if (error) {
+            console.log('Error fetching appointments:', error);
+            return res.json({ Error: 'Failed to fetch appointments' });
+          }
+
+          console.log('Appointments:', results); // Log fetched appointments
+
+          return res.json({ Status: 'Successs', appointments: results });
+        });
+      }
+    });
+  }
+};
+export const UnfinishedAppointments = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.json({ Error: 'You are not authenticated' });
+  } else {
+    jwt.verify(token, 'jwt-secret-key', (err, decoded) => {
+      if (err) {
+        return res.json({ Error: 'Token is not valid' });
+      } else {
+        const idnum = decoded.idnum;
+        console.log('User-Appointments Decoded token:', decoded);
+        console.log('User-Appointments Decoded idnum:', idnum);
+        req.idnum = idnum;
+        res.locals.idnum = idnum; // Set res.locals.idnum
+        console.log('User-Appointments req.idnum:', req.idnum);
+        console.log('User-Appointments res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+
+        // Query the database to get user role and other data
+        const q = 'SELECT * FROM appointments WHERE idnum = ? and status like "unfinished" ';
+
+        db.query(q, [idnum], (error, results) => {
+          if (error) {
+            console.log('Error fetching appointments:', error);
+            return res.json({ Error: 'Failed to fetch appointments' });
+          }
+
+          console.log('Appointments:', results); // Log fetched appointments
+
+          return res.json({ Status: 'Successs', appointments: results });
+        });
+      }
+    });
+  }
+};
+
 
 
 // This function is responsible for inserting appointments in database
@@ -149,6 +220,8 @@ export const TimeSlots = (req, res) =>{
   })
 }
 
+
+
 //This function is responsible for counting appointments from database and returning the number of the total appointments!
 //Used in Dashboard.js(Frontend side).
 
@@ -192,7 +265,7 @@ export const CountAppointments = (req, res) => {
 
   export const InsertAppointment = async (req, res) => {
     try {
-      const { idnum, appointmentDate, timeslot, categoryname } = req.body;
+      const { idnum, appointmentDate, timeslot, categoryname, appointmentTime } = req.body;
   
       // Get the doctor with the minimum appointments count from the specific city
       const selectDoctorQuery = `
@@ -236,11 +309,11 @@ export const CountAppointments = (req, res) => {
   
         // Insert the appointment
         const insertQuery = `
-          INSERT INTO appointments (doctor_id, idnum, appointment_date, timeslot, categoryname)
-          VALUES (?, ?, ?, ?, ?);
-        `;
-        const insertValues = [doctorId, idnum, appointmentDate, timeslot, categoryname];
-        await executeQuery(insertQuery, insertValues);
+      INSERT INTO appointments (doctor_id, idnum, appointment_date, timeslot, categoryname, appointment_time)
+      VALUES (?, ?, ?, ?, ?, ?);
+    `;
+    const insertValues = [doctorId, idnum, appointmentDate, timeslot, categoryname, appointmentTime];
+    await executeQuery(insertQuery, insertValues);
   
         res.status(200).json({ message: 'Appointment successfully booked!' });
       } else {

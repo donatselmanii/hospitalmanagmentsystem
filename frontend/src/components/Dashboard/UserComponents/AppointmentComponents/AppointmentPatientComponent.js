@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../../../../css/Appointment/AppointmentPatient.css'
 
 function AppointmentPatientComponent() {
-  const [idnum, setIdnum] = useState('');
   const [appointments, setAppointments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,13 +10,12 @@ function AppointmentPatientComponent() {
   useEffect(() => {
     async function fetchData() {
       try {
-        console.log('Inside useEffect');
-        const response = await axios.get('http://localhost:8081/appointments/userappointments', { withCredentials : true });
+        const response = await axios.get('http://localhost:8081/appointments/userappointments', { withCredentials: true });
         if (response.data.Status === 'Successs') {
           setAppointments(response.data.appointments);
           console.log("Appointments:", response.data.appointments);
         } else {
-          setAppointments([]); // Set empty array when no appointments found
+          setAppointments([]);
           console.log("Appointments:", response.data.appointments);
         }
       } catch (error) {
@@ -26,22 +25,20 @@ function AppointmentPatientComponent() {
     }
     fetchData();
   }, []);
+
+  const getTimeSlot = (timeSlot) => {
+    // Split the time string into hours and minutes
+    const [hours, minutes] = timeSlot.split(':');
+  
+    // Format the hours and minutes with leading zeros if needed
+    const formattedHours = parseInt(hours, 10).toString().padStart(2, '0');
+    const formattedMinutes = parseInt(minutes, 10).toString().padStart(2, '0');
+  
+    // Return the formatted time slot
+    return `${formattedHours}:${formattedMinutes}`;
+  };
   
   
-
-  useEffect(() => {
-    axios.get('http://localhost:8081/login', { withCredentials: true })
-      .then(res => {
-        if (res.data.Status === 'Success') {
-          setIdnum(res.data.idnum);
-          console.log("Okay");
-        } else {
-          console.log("Not okay");
-        }
-      })
-      .catch(err => console.log(err));
-  }, []);
-
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -50,26 +47,24 @@ function AppointmentPatientComponent() {
     return <p>Error: {error.message}</p>;
   }
 
- 
-
   return (
-    <>
-      <h2>Your Appointments</h2>
+    <div className='appointment-container'>
+      <h2 className='appointment-heading'>Your Appointments</h2>
       {appointments.length === 0 ? (
-        <p>No appointments found.</p>
+        <p className='appointment-message'>No appointments found.</p>
       ) : (
-        <ul>
+        <ul className='appointment-list'>
           {appointments.map((appointment) => (
-            <li key={appointment.appointmentid}>
-              <p>Appointment ID: {appointment.appointmentid}</p>
-              <p>Date & Time: {new Date(appointment.appointment_date).toDateString()}</p>
-              <p>Category: {appointment.categoryname}</p> {/* Use categoryname instead of city */}
-              <hr />
+            <li className='appointment-item' key={appointment.appointmentid}>
+              <p className='appointment-info'>Appointment ID: {appointment.appointmentid}</p>
+              <p className='appointment-info'>Date: {new Date(appointment.appointment_date).toDateString()}</p>
+              <p className='appointment-info'>Time: {getTimeSlot(appointment.appointment_time)}</p>
+              <p className='appointment-info'>Category: {appointment.categoryname}</p>
             </li>
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 }
 
