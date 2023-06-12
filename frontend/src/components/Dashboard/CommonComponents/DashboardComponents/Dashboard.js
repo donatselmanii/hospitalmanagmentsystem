@@ -11,6 +11,7 @@ import ManageAppointmentsComponent from '../../AdminComponents/AppointmentCompon
 import UserCardComponent from '../Card/UserCardComponent'
 import AppointmentPatientComponent from '../../UserComponents/AppointmentComponents/AppointmentPatientComponent'
 import InsertAppointment from '../../UserComponents/AppointmentComponents/InsertAppointment';
+import ManageAppointmentsPatient from '../../UserComponents/AppointmentComponents/ManageAppointmentsPatient'
 import ContactForm from '../../UserComponents/FeedBackComponents/ContactForm';
 import '../../../../css/Dashboardcss/dashboard.css'
 
@@ -111,7 +112,7 @@ function Dashboard() {
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => handleNestedItemClick('ManageAppointments')}>
+            <a href="#" onClick={() => handleNestedItemClick('ManageAppointmentsPatient')}>
               Manage Appointments
             </a>
           </li>
@@ -155,6 +156,9 @@ function Dashboard() {
       break;
     case 'ManageAppointments':
       contentComponent = < ManageAppointmentsComponent/>;
+      break; 
+    case 'ManageAppointmentsPatient':
+      contentComponent = < ManageAppointmentsPatient/>;
       break; 
     case 'InsertAppointment':
       contentComponent = < InsertAppointment/>;

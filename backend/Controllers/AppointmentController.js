@@ -109,7 +109,7 @@ export const CompletedAppointments = (req, res) => {
 
           console.log('Appointments:', results); // Log fetched appointments
 
-          return res.json({ Status: 'Successs', appointments: results });
+          return res.json({ Status: 'Success', appointments: results });
         });
       }
     });
@@ -144,7 +144,7 @@ export const UnfinishedAppointments = (req, res) => {
 
           console.log('Appointments:', results); // Log fetched appointments
 
-          return res.json({ Status: 'Successs', appointments: results });
+          return res.json({ Status: 'Success', appointments: results });
         });
       }
     });

@@ -1,0 +1,53 @@
+.appointment-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .appointment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .appointment-item {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 85%;
+  }
+  
+  .completed {
+    background-color: #e0f2f1;
+  }
+  
+  .unfinished {
+    background-color: #ffe0e0;
+  }
+  .ManageAppointmentsPatient-button-cancel {
+    background-color: #ff0000;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .ManageAppointmentsPatient-button-cancel:hover {
+    background-color: #cc0000;
+  }
+
+  .ManageAppointmentsPatient-button {
+    background-color: #0d9b0d;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .ManageAppointmentsPatient-button:hover {
+    background-color: #0b7417;
+  }
+  

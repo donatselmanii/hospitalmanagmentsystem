@@ -14,13 +14,14 @@ import AddProductTest from './components/Dashboard/AdminComponents/AddProductTes
 import MedicalReport from './components/Dashboard/DoctorComponents/MedicalReport';
 import TimeSlots from './components/Dashboard/AdminComponents/AppointmentComponents/TimeSlots';
 import SendEmail from './components/Dashboard/AdminComponents/AppointmentComponents/SendEmail';
+import ManageAppointmentsPatient from './components/Dashboard/UserComponents/AppointmentComponents/ManageAppointmentsPatient';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          
+
           <Route path="/" element={<Home />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
@@ -36,6 +37,7 @@ function App() {
           <Route path="/AddCategory" element={<AddCategory />} />
           <Route path="/Report" element={<MedicalReport />} />
           <Route path="/TimeSlots" element={<TimeSlots />} />
+          <Route path="/Manage" element={<ManageAppointmentsPatient />} />
 
         </Routes>
       </BrowserRouter>
