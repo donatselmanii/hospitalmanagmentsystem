@@ -15,7 +15,7 @@ import MedicalReport from './components/Dashboard/DoctorComponents/MedicalReport
 import TimeSlots from './components/Dashboard/AdminComponents/AppointmentComponents/TimeSlots';
 import SendEmail from './components/Dashboard/AdminComponents/AppointmentComponents/SendEmail';
 import ManageAppointmentsPatient from './components/Dashboard/UserComponents/AppointmentComponents/ManageAppointmentsPatient';
-
+import UserMedicalReport from './components/Dashboard/UserComponents/AppointmentComponents/UserMedicalReport';
 function App() {
   return (
     <div className="App">
@@ -38,6 +38,8 @@ function App() {
           <Route path="/Report" element={<MedicalReport />} />
           <Route path="/TimeSlots" element={<TimeSlots />} />
           <Route path="/Manage" element={<ManageAppointmentsPatient />} />
+          <Route path="/medical-report/:appointmentId" element={<UserMedicalReport />} />
+
 
         </Routes>
       </BrowserRouter>

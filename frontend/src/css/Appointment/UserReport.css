@@ -1,0 +1,22 @@
+.UserReport-reportText {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    width: 60%;
+    min-height: 200px;
+    padding: 0.5rem;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+  }
+  
+  .UserReport-reportText:focus {
+    outline: none;
+    box-shadow: 0 0 5px #aaa;
+  }
+  
+  .UserReport-noReport {
+    color: #888;
+  }
+  

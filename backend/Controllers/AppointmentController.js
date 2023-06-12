@@ -259,6 +259,30 @@ export const CountAppointments = (req, res) => {
     });
   };
 
+//
+//
+export const UserReports = (req, res) => {
+  const appointmentId = req.params.appointmentid;
+  const query = "SELECT * FROM appointments WHERE appointmentid = ?";
+
+
+  db.query(query, [appointmentId], (error, results) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ Status: 'Error', Message: 'Failed to fetch medical report' });
+    } else {
+      if (results.length > 0) {
+        const medicalReport = results[0].medical_report;
+        res.status(200).json({ Status: 'Success', MedicalReport: medicalReport });
+      } else {
+        res.status(404).json({ Status: 'Error', Message: 'Medical report not found' });
+      }
+    }
+  });
+};
+
+
+
 
   //
   //
