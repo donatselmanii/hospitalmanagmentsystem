@@ -191,6 +191,22 @@ export const InsertAppointmentTest = (req, res) => {
     })
   }
 
+  
+export const CancelAppointment = (req, res) => {
+  const id = req.params.id;
+  const query = "DELETE FROM appointments WHERE id=?";
+
+  db.query(query, [id], (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ status: 'Error', message: 'Failed to cancel the appointment.' });
+    } else {
+      console.log(`Deleted appointment with id: ${id}`);
+      res.json({ status: 'Success', message: 'Appointment cancelled successfully.' });
+    }
+  });
+};
+
 //This function is responsible for fetching appoitnments from database.
 //Used in AppointmentComponent(frontend side).
 export const Appointments = (req, res) =>{
@@ -282,6 +298,166 @@ export const UserReports = (req, res) => {
 };
 
 
+export const getDoctorAppointments = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.json({ Error: 'You are not authenticated' });
+  } else {
+    jwt.verify(token, 'jwt-secret-key', (err, decoded) => {
+      if (err) {
+        return res.json({ Error: 'Token is not valid' });
+      } else {
+        const idnum = decoded.idnum;
+        console.log('Decoded token:', decoded);
+        console.log('Decoded idnum:', idnum);
+
+        // Query the database to get user role and other data
+        const q = 'SELECT name, surname, phone, email, role FROM user WHERE idnum = ?';
+
+        db.query(q, [idnum], (error, results) => {
+          if (error) {
+            return res.json({ Error: 'Failed to fetch user role' });
+          }
+
+          if (results.length === 0) {
+            return res.json({ Error: 'User not found' });
+          }
+          const id = results[0].id;
+          const role = results[0].role;
+          const name = results[0].name;
+          const surname = results[0].surname;
+          const phone = results[0].phone;
+          const email = results[0].email;
+
+          // SQL query to fetch appointments of the doctor with user details
+          const query = `
+            SELECT a.*, u.idnum AS user_idnum, u.name AS user_name
+            FROM appointments AS a
+            JOIN user AS u ON a.idnum = u.idnum
+            WHERE a.doctor_id = ?;
+          `;
+
+          // Execute the query with the provided doctorId parameter
+          db.query(query, [idnum], (error, appointmentResults) => {
+            if (error) {
+              console.log('Error retrieving appointments:', error);
+              res.status(500).json({ error: 'Error retrieving appointments' });
+            } else {
+              res.json({
+                Status: 'Success',
+                id: id,
+                idnum: idnum,
+                role: role,
+                name: name,
+                surname: surname,
+                phone: phone,
+                email: email,
+                appointments: appointmentResults
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+};
+
+
+
+export const VerifyUserRole = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.json({ Error: 'You are not authenticated' });
+  } else {
+    jwt.verify(token, 'jwt-secret-key', (err, decoded) => {
+      if (err) {
+        return res.json({ Error: 'Token is not valid' });
+      } else {
+        const idnum = decoded.idnum;
+        console.log('Decoded token:', decoded);
+        console.log('Decoded idnum:', idnum);
+        req.idnum = idnum;
+        res.locals.idnum = idnum; // Set res.locals.idnum
+        console.log('req.idnum:', req.idnum);
+        console.log('res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+
+        // Query the database to get user role and other data
+        const q = 'SELECT name, surname, phone, email, role FROM user WHERE idnum = ?';
+
+        db.query(q, [idnum], (error, results) => {
+          if (error) {
+            return res.json({ Error: 'Failed to fetch user role' });
+          }
+
+          if (results.length === 0) {
+            return res.json({ Error: 'User not found' });
+          }
+          const id = results[0].id;
+          const role = results[0].role;
+          const name = results[0].name;
+          const surname = results[0].surname;
+          const phone = results[0].phone;
+          const email = results[0].email;
+
+          return res.json({ Status: 'Success', id: id, idnum: idnum, role: role, name: name, surname: surname, phone: phone, email: email });
+        });
+      }
+    });
+  }
+};
+
+//
+//
+export const DoctorAppointments = (req, res) => {
+  const doctorId = req.idnum; // Access the idnum from the VerifyUserRole function
+
+  // SQL query to fetch appointments of the doctor with user details
+  const query = `
+  SELECT a.*, u.idnum AS user_idnum, u.name AS user_name
+  FROM appointments
+  AS a JOIN user AS u ON a.idnum = u.idnum
+  WHERE a.doctor_id = ?;
+  `;
+
+  // Execute the query with the provided doctorId parameter
+  db.query(query, [doctorId], (error, results) => {
+    if (error) {
+      console.log('Error retrieving appointments:', error);
+      res.status(500).json({ error: 'Error retrieving appointments' });
+      console.log(req.idnum)
+    } else {
+      res.json(results); // Return the fetched appointments with user details as JSON response
+      console.log(req.idnum)
+    }
+  });
+};
+
+//
+//
+// 
+// Update appointment status to completed
+
+export const CompletedAppointment = (req, res) => {
+  const { appointmentId } = req.params;
+
+  const q = 'UPDATE appointments SET status = "completed" WHERE appointmentid = ?';
+
+  db.query(q, [appointmentId], (error, results) => {
+    if (error) {
+      console.log('Error updating appointment status:', error);
+      res.status(500).json({ error: 'Failed to update appointment status' });
+    } else {
+      console.log('Appointment status updated successfully');
+      console.log(appointmentId);
+      res.sendStatus(200);
+    }
+  });
+};
+
+
+ 
 
 
   //

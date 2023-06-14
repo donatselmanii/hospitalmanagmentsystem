@@ -13,7 +13,9 @@ import AppointmentPatientComponent from '../../UserComponents/AppointmentCompone
 import InsertAppointment from '../../UserComponents/AppointmentComponents/InsertAppointment';
 import ManageAppointmentsPatient from '../../UserComponents/AppointmentComponents/ManageAppointmentsPatient'
 import ContactForm from '../../UserComponents/FeedBackComponents/ContactForm';
+import DoctorAppointments from '../../DoctorComponents/Appointments/DoctorAppointments'
 import '../../../../css/Dashboardcss/dashboard.css'
+
 
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState('usercard');
@@ -166,6 +168,10 @@ function Dashboard() {
     case 'ContactForm':
       contentComponent = < ContactForm/>;
       break;
+    case 'DoctorAppointments':
+      contentComponent = < DoctorAppointments/>;
+      break;
+      
     default:
       contentComponent = null;
   }
@@ -250,7 +256,11 @@ function Dashboard() {
     } else if (userRole === 'doctor') {
       return (
         <ul className="sidebar--items">
-          {/* Doctor-specific navbar items */}
+          <li>
+            <a href="#" onClick={() => handleComponentChange('DoctorAppointments')}>
+              Appointments
+            </a>
+          </li>
           <li>
           <a href="#" onClick={handleLogout}>
             Logout

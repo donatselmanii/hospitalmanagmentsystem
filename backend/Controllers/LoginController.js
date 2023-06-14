@@ -109,14 +109,14 @@ export const VerifyUserRole = (req, res) => {
           if (results.length === 0) {
             return res.json({ Error: 'User not found' });
           }
-
+          const id = results[0].id;
           const role = results[0].role;
           const name = results[0].name;
           const surname = results[0].surname;
           const phone = results[0].phone;
           const email = results[0].email;
 
-          return res.json({ Status: 'Success', idnum: idnum, role: role, name: name, surname: surname, phone: phone, email: email });
+          return res.json({ Status: 'Success', id: id, idnum: idnum, role: role, name: name, surname: surname, phone: phone, email: email });
         });
       }
     });
