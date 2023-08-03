@@ -1,66 +1,50 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "../../../../css/largedevices/Users.css";
 
 function Users() {
   const [users, setUsers] = useState([]);
-  const [editedUsers, setEditedUsers] = useState({});
+  const [editingUserId, setEditingUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get("http://localhost:8081/users");
-      setUsers(response.data);
-    }
     fetchData();
   }, []);
+
+  async function fetchData() {
+    try {
+      const response = await axios.get("http://localhost:8081/users");
+      setUsers(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function deleteUser(id) {
     try {
       await axios.delete(`http://localhost:8081/users/${id}`);
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-      resetInputField(id);
+      setEditingUserId(null); // Clear editing state after deletion
     } catch (error) {
       console.log(error);
     }
   }
 
-  async function editUser(id, user) {
+  async function updateUser(updatedUser) {
     try {
-      const editedUser = editedUsers[id];
-      const updatedUser = {
-        ...user,
-        ...editedUser,
-      };
-      await axios.put(`http://localhost:8081/users/${id}`, updatedUser);
+      await axios.put(`http://localhost:8081/users/${updatedUser.id}`, updatedUser);
       setUsers((prevUsers) =>
-        prevUsers.map((u) => (u.id === id ? { ...u, ...updatedUser } : u))
+        prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
       );
-      resetInputField(id);
+      setEditingUserId(null); // Clear editing state after update
     } catch (error) {
       console.log(error);
     }
   }
 
-  function handleInputChange(event, userId, key) {
-    const { value } = event.target;
-    setEditedUsers((prevEditedUsers) => ({
-      ...prevEditedUsers,
-      [userId]: {
-        ...prevEditedUsers[userId],
-        [key]: value,
-      },
-    }));
-  }
-
-  function resetInputField(userId, field) {
-    setEditedUsers((prevEditedUsers) => ({
-      ...prevEditedUsers,
-      [userId]: {
-        ...prevEditedUsers[userId],
-        [field]: undefined,
-      },
-    }));
+  function handleEditUser(userId) {
+    setEditingUserId(userId);
   }
 
   function handleSendEmail(userId) {
@@ -70,99 +54,126 @@ function Users() {
   return (
     <>
       <h1 className="adminPageH1">Users list</h1>
-      <table>
-        <thead>
-          <tr>
-            <th className="adminPageTableHead">ID</th>
-            <th className="adminPageTableHead">ID Number</th>
-            <th className="adminPageTableHead">Name</th>
-            <th className="adminPageTableHead">Surname</th>
-            <th className="adminPageTableHead">Phone</th>
-            <th className="adminPageTableHead">Email</th>
-            <th className="adminPageTableHead">Role</th>
-            <th className="adminPageTableHead">Functions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td className="adminPagetable">
-                <input
-                  type="text"
-                  placeholder="ID"
-                  value={editedUsers[user.id]?.id || user.id}
-                  onChange={(event) => handleInputChange(event, user.id, "id")}
-                />
-              </td>
-              <td className="adminPagetable">
-                <input
-                  type="text"
-                  placeholder="ID Number"
-                  value={editedUsers[user.id]?.idnum || user.idnum}
-                  onChange={(event) =>
-                    handleInputChange(event, user.id, "idnum")
-                  }
-                />
-              </td>
-              <td className="adminPagetable">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  value={editedUsers[user.id]?.name || user.name}
-                  onChange={(event) =>
-                    handleInputChange(event, user.id, "name")
-                  }
-                />
-              </td>
-              <td className="adminPagetable">
-                <input
-                  type="text"
-                  placeholder="Surname"
-                  value={editedUsers[user.id]?.surname || user.surname}
-                  onChange={(event) =>
-                    handleInputChange(event, user.id, "surname")
-                  }
-                />
-              </td>
-              <td className="adminPagetable">
-                <input
-                  type="text"
-                  placeholder="Phone"
-                  value={editedUsers[user.id]?.phone || user.phone}
-                  onChange={(event) =>
-                    handleInputChange(event, user.id, "phone")
-                  }
-                />
-              </td>
-              <td className="adminPagetable">
-                <input
-                  type="text"
-                  placeholder="Email"
-                  value={editedUsers[user.id]?.email || user.email}
-                  onChange={(event) =>
-                    handleInputChange(event, user.id, "email")
-                  }
-                />
-              </td>
-              <td className="adminPagetable">
-                <input
-                  type="text"
-                  placeholder="Role"
-                  value={editedUsers[user.id]?.role || user.role}
-                  onChange={(event) =>
-                    handleInputChange(event, user.id, "role")
-                  }
-                />
-              </td>
-              <td className="adminPagetable">
-                <button onClick={() => deleteUser(user.id)}>Delete</button>
-                <button onClick={() => editUser(user.id, user)}>Edit</button>
-                <button onClick={() => handleSendEmail(user.id)}>Send Email</button>
-              </td>
+      <div className="Users-container">
+        <table className="Users-table">
+          <thead className="Users-thead">
+            <tr className="Users-tr">
+              <th className="adminPageTableHead">ID</th>
+              <th className="adminPageTableHead">ID Number</th>
+              <th className="adminPageTableHead">Name</th>
+              <th className="adminPageTableHead">Surname</th>
+              <th className="adminPageTableHead">Phone</th>
+              <th className="adminPageTableHead">Email</th>
+              <th className="adminPageTableHead">Role</th>
+              <th className="adminPageTableHead">Functions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="Users-tbody">
+            {users.map((user) => (
+              <tr className="Users-tr" key={user.id}>
+                <td className="adminPagetable">{user.id}</td>
+                <td className="adminPagetable">{user.idnum}</td>
+                <td className="adminPagetable">{user.name}</td>
+                <td className="adminPagetable">{user.surname}</td>
+                <td className="adminPagetable">{user.phone}</td>
+                <td className="adminPagetable">{user.email}</td>
+                <td className="adminPagetable">{user.role}</td>
+                <td className="adminPagetable">
+                  <div>
+                    <button className="Users-button" onClick={() => deleteUser(user.id)}>
+                      Delete
+                    </button>
+                    <button className="Users-button" onClick={() => handleSendEmail(user.id)}>
+                      Send Email
+                    </button>
+                    {editingUserId === user.id ? (
+                      <div>
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder="Name"
+                          value={user.name}
+                          onChange={(e) => setUsers((prevUsers) =>
+                            prevUsers.map((prevUser) => (
+                              prevUser.id === user.id ? { ...prevUser, name: e.target.value } : prevUser
+                            ))
+                          )}
+                        />
+                        <input
+                          type="text"
+                          name="email"
+                          placeholder="Email"
+                          value={user.email}
+                          onChange={(e) => setUsers((prevUsers) =>
+                            prevUsers.map((prevUser) => (
+                              prevUser.id === user.id ? { ...prevUser, email: e.target.value } : prevUser
+                            ))
+                          )}
+                        />
+                        <input
+                          type="text"
+                          name="idnum"
+                          placeholder="ID Number"
+                          value={user.idnum}
+                          onChange={(e) => setUsers((prevUsers) =>
+                            prevUsers.map((prevUser) => (
+                              prevUser.id === user.id ? { ...prevUser, idnum: e.target.value } : prevUser
+                            ))
+                          )}
+                        />
+                        {/* Add other input fields for updating other fields */}
+                        {/* For example, add input fields for surname, phone, and role */}
+                        <input
+                          type="text"
+                          name="surname"
+                          placeholder="Surname"
+                          value={user.surname}
+                          onChange={(e) => setUsers((prevUsers) =>
+                            prevUsers.map((prevUser) => (
+                              prevUser.id === user.id ? { ...prevUser, surname: e.target.value } : prevUser
+                            ))
+                          )}
+                        />
+                        <input
+                          type="text"
+                          name="phone"
+                          placeholder="Phone"
+                          value={user.phone}
+                          onChange={(e) => setUsers((prevUsers) =>
+                            prevUsers.map((prevUser) => (
+                              prevUser.id === user.id ? { ...prevUser, phone: e.target.value } : prevUser
+                            ))
+                          )}
+                        />
+                        <input
+                          type="text"
+                          name="role"
+                          placeholder="Role"
+                          value={user.role}
+                          onChange={(e) => setUsers((prevUsers) =>
+                            prevUsers.map((prevUser) => (
+                              prevUser.id === user.id ? { ...prevUser, role: e.target.value } : prevUser
+                            ))
+                          )}
+                        />
+                        <button className="Users-button" onClick={() => updateUser(user)}>
+                          Update
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <button className="Users-button" onClick={() => handleEditUser(user.id)}>
+                          Edit
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
