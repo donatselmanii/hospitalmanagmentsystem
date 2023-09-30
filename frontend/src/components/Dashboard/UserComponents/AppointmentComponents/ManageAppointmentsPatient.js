@@ -54,6 +54,26 @@ function ManageAppointmentsPatient() {
     navigate(`/medical-report/${appointmentId}`);
   };
 
+  const handleCancelAppointment = async (appointmentId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8081/appointments/cancel/${appointmentId}`, {
+        withCredentials: true,
+      });
+      if (response.data.Status === 'Success') {
+        // Appointment cancellation successful, perform necessary updates
+        // For example, remove the cancelled appointment from the list
+        setUnfinishedAppointments((prevAppointments) =>
+          prevAppointments.filter((appointment) => appointment.appointmentid !== appointmentId)
+        );
+        console.log('Appointment cancelled successfully.');
+      } else {
+        console.log('Failed to cancel the appointment.');
+      }
+    } catch (error) {
+      console.log('An error occurred while cancelling the appointment:', error);
+    }
+  };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -78,7 +98,9 @@ function ManageAppointmentsPatient() {
                   <p className="ManageAppointmentsPatient-p">Appointment Time: {appointment.appointment_time}</p>
                   <p className="ManageAppointmentsPatient-p">Category Name: {appointment.categoryname}</p>
                   <p className="ManageAppointmentsPatient-p">Status: {appointment.status}</p>
-                  <button className="ManageAppointmentsPatient-button-cancel">Cancel Appointment</button>
+                  <button className="ManageAppointmentsPatient-button-cancel" onClick={() => handleCancelAppointment(appointment.appointmentid)}>
+                    Cancel Appointment
+                  </button>
                 </li>
               ))}
             </ul>

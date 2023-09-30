@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../../../css/Appointment/DoctorAppointments.css";
+import { useNavigate } from "react-router-dom";
+import { MDBBadge, MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
+import styles from "../../../../css/Appointment/DoctorAppointments.module.css";
+import "../../../../css/largedevices/ShowAlert.css";
 
 function DoctorAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -44,25 +46,22 @@ function DoctorAppointments() {
 
   const handleCancelAppointment = async (appointmentId) => {
     try {
-      const response = await axios.put(
-        `http://localhost:8081/appointments/${appointmentId}/cancel`,
-        {},
+      const response = await axios.delete(
+        `http://localhost:8081/appointments/cancel/${appointmentId}`,
         {
           withCredentials: true,
         }
       );
-
-      // Handle the response as needed
-      console.log(response);
+  
+      if (response.status === 204) {
+        setShowAlert(true);
+        fetchData();
+      }
     } catch (error) {
       console.log(error);
     }
   };
-
-  const handleViewReport = (medicalReport) => {
-    // Handle viewing the medical report
-    console.log(medicalReport);
-  };
+  
 
   const handleSetCompleted = async (appointmentId) => {
     console.log(appointmentId);
@@ -77,7 +76,7 @@ function DoctorAppointments() {
 
       if (response.status === 200) {
         setShowAlert(true);
-        fetchData(); 
+        fetchData();
       }
     } catch (error) {
       console.log(error);
@@ -85,67 +84,111 @@ function DoctorAppointments() {
   };
 
   const handleWriteReport = (appointmentId) => {
-    navigate(`/writereport/${appointmentId}`);
+    navigate(`/medical-report/${appointmentId}`);
   };
 
   return (
     <>
-      <h1>Doctor Appointments</h1>
-
-      <div className="DoctorAppointments-container">
-        <div className="DoctorAppointments-unfinished">
+      <div className={styles.DoctorAppointmentsContainer}>
+        <div className={styles.DoctorAppointmentsUnfinished}>
           <h2>Unfinished Appointments</h2>
-          <table className="DoctorAppointments-table">
-            {/* ... table code ... */}
-            <tbody>
+          <MDBTable>
+            <MDBTableHead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>ID Number</th>
+                <th>Appointment Date</th>
+                <th>City</th>
+                <th>Appointment Time</th>
+                <th>Status</th>
+                <th>User Name</th>
+                <th>Action</th>
+              </tr>
+            </MDBTableHead>
+            <MDBTableBody>
               {unfinishedAppointments.map((appointment) => (
                 <tr key={appointment.appointmentid}>
-                  {/* ... table row code ... */}
-                  <td className="DoctorAppointments-td">
-                    <button
-                      className="DoctorAppointments-button"
-                      onClick={() => handleSetCompleted(appointment.appointmentid)}
+                  <td>{appointment.appointmentid}</td>
+                  <td>{appointment.idnum}</td>
+                  <td>{appointment.appointment_date}</td>
+                  <td>{appointment.categoryname}</td>
+                  <td>{appointment.appointment_time}</td>
+                  <td>
+                    <MDBBadge color='warning' pill>
+                      {appointment.status}
+                    </MDBBadge>
+                  </td>
+                  <td>{appointment.user_name}</td>
+                  <td>
+                    <MDBBtn
+                      color='success'
+                      size='sm'
+                      onClick={() =>
+                        handleSetCompleted(appointment.appointmentid)
+                      }
                     >
                       Set Completed
-                    </button>
-                    {/* ... other buttons ... */}
+                    </MDBBtn>
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
+            </MDBTableBody>
+          </MDBTable>
         </div>
 
-        <div className="DoctorAppointments-completed">
+        <div className={styles.DoctorAppointmentsCompleted}>
           <h2>Completed Appointments</h2>
-          <table className="DoctorAppointments-table">
-            {/* ... table code ... */}
-            <tbody>
+          <MDBTable>
+            <MDBTableHead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>ID Number</th>
+                <th>Appointment Date</th>
+                <th>City</th>
+                <th>Appointment Time</th>
+                <th>Status</th>
+                <th>Patient Name</th>
+                <th>Action</th>
+              </tr>
+            </MDBTableHead>
+            <MDBTableBody>
               {completedAppointments.map((appointment) => (
                 <tr key={appointment.appointmentid}>
-                  {/* ... table row code ... */}
-                  <td className="DoctorAppointments-td">
-                    <button
-                      className="DoctorAppointments-button"
-                      onClick={() => handleViewReport(appointment.medical_report)}
+                  <td>{appointment.appointmentid}</td>
+                  <td>{appointment.idnum}</td>
+                  <td>{appointment.appointment_date}</td>
+                  <td>{appointment.categoryname}</td>
+                  <td>{appointment.appointment_time}</td>
+                  <td>
+                    <MDBBadge color='success' pill>
+                      {appointment.status}
+                    </MDBBadge>
+                  </td>
+                  <td>{appointment.user_name}</td>
+                  <td>
+                    <MDBBtn
+                      color='info'
+                      size='sm'
+                      onClick={() =>
+                        handleWriteReport(appointment.appointmentid)
+                      }
                     >
-                      View Report
-                    </button>
-                    {/* ... other buttons ... */}
+                      Edit or View Report
+                    </MDBBtn>
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
+            </MDBTableBody>
+          </MDBTable>
         </div>
       </div>
 
       {showAlert && (
         <div className="alert">
-          <p>Appointment marked as completed!</p>
-          <button className="loginbutton" onClick={handleAlertClose}>
-            OK
-          </button>
+          <p>Appointment status updated successfully!</p>
+          <MDBBtn color='primary' size='sm' onClick={handleAlertClose}>
+            Close
+          </MDBBtn>
         </div>
       )}
     </>
