@@ -1,0 +1,89 @@
+.Users-container{
+  margin-left: 270px;
+}
+.Users-page {
+  width: 400px;
+  height: 400px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  margin: 0 auto; 
+  margin-top: 50px;
+  border-radius: 10px;
+  padding: 20px;
+  overflow: hidden; 
+}
+.Users-table-container {
+  height: 320px; 
+  overflow-y: auto; 
+  margin-left: -400px;
+}
+
+.Users-table {
+  border-collapse: collapse;
+  margin-right: 1000px;
+}
+.adminPageTableHead {
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+  background-color: #333;
+}
+
+.Users-thead {
+  background-color: #333;
+  color: #fff;
+  margin-left: -300px;
+}
+
+.Users-tr {
+  background-color: #fff;
+}
+
+.adminPageTableHead {
+  padding: 10px;
+  text-align: center;
+}
+
+.adminPagetable {
+  padding: 10px;
+  text-align: center;
+}
+
+.Users-input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.Users-button {
+  padding: 5px 10px;
+  margin-right: 5px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.Users-button:hover {
+  background-color: #45a049;
+}
+
+.Users-button:last-child {
+  background-color: #007bff;
+}
+
+.Users-button:last-child:hover {
+  background-color: #0056b3;
+}
+
+.Users-button:disabled {
+  background-color: #d5b9b9;
+  cursor: not-allowed;
+}
+
+.marginLeftTable {
+  margin-left: 180px; 
+}

@@ -91,15 +91,8 @@ export const VerifyUserRole = (req, res) => {
         return res.json({ Error: 'Token is not valid' });
       } else {
         const idnum = decoded.idnum;
-        console.log('Decoded token:', decoded);
-        console.log('Decoded idnum:', idnum);
-        req.idnum = idnum;
-        res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('req.idnum:', req.idnum);
-        console.log('res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
 
-        // Query the database to get user role and other data
-        const q = 'SELECT name, surname, phone, email, role FROM user WHERE idnum = ?';
+        const q = 'SELECT idnum, name, surname, phone, email, role, city, address FROM user WHERE idnum = ?';
 
         db.query(q, [idnum], (error, results) => {
           if (error) {
@@ -110,13 +103,16 @@ export const VerifyUserRole = (req, res) => {
             return res.json({ Error: 'User not found' });
           }
           const id = results[0].id;
+          const idnum = results[0].idnum;
           const role = results[0].role;
           const name = results[0].name;
           const surname = results[0].surname;
           const phone = results[0].phone;
           const email = results[0].email;
+          const address = results[0].address;
+          const city = results[0].city;
 
-          return res.json({ Status: 'Success', id: id, idnum: idnum, role: role, name: name, surname: surname, phone: phone, email: email });
+          return res.json({ Status: 'Success', id: id, idnum: idnum, role: role, name: name, surname: surname, phone: phone, email: email, address: address, city: city });
         });
       }
     });
@@ -127,7 +123,6 @@ export const VerifyUserRole = (req, res) => {
 //
 //
 export const Logout = (req, res) => {
-  // Clear the token cookie
   res.clearCookie('token');
   return res.json({ Status: "Success", message: "Logged out successfully" });
 }

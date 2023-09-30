@@ -1,27 +1,78 @@
 .timeslotcontainer {
+  margin: 50px 0 0 550px;
+}
+
+.timeslotcontent {
+  margin-bottom: 20px;
+}
+
+.timeslotlabel {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.timeslot-input {
+  padding: 5px;
+}
+
+.timeslot-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.timeslottable {
+  margin-top: 20px;
+}
+
+.timeslot-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.timeslot-thead {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.timeslot-tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.timeslot-th,
+.timeslot-td {
+  padding: 10px;
+  text-align: left;
+}
+
+.timeslot-td input {
+  width: 100%;
+  padding: 5px;
+}
+
+/* Additional styles for responsiveness */
+
+@media screen and (max-width: 768px) {
+  .timeslotcontent {
+    margin-bottom: 0;
+  }
+
+  .timeslot-button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .timeslot-td {
     display: flex;
     flex-direction: column;
-    margin-left: 500px;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin-left: 0 auto;
   }
-  
-  .timeslotcontent {
-    width: 60%;
-    margin-bottom: 20px;
+
+  .timeslot-input {
+    margin-bottom: 5px;
   }
-  
-  .timeslottable {
-    text-align: center;
-  }
-  .time-slot {
-    /* Your regular button styles */
-  }
-  
-  .time-slot.selected {
-    background-color: blue; /* Set your desired color for the selected button */
-    color: white; /* Set the text color for the selected button */
-  }
-  
+}

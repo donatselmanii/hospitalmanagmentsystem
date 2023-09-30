@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
 import '../../../../css/Dashboardcss/timeslots.css';
-import '../../../../css/Dashboardcss/dashboard.css'
+import '../../../../css/Dashboardcss/dashboard.css';
 
 const TimeSlots = () => {
   const [hour, setHour] = useState('');
@@ -45,62 +46,67 @@ const TimeSlots = () => {
   }
 
   return (
-    <div className="timeslotcontainer">
-      <div className="timeslotcontent">
-        <h2>Add Time Slot</h2>
-        <form onSubmit={handleSubmit}>
-          <label className='timeslotlabel'>
-            Hour:
-            <input type="number" value={hour} onChange={(e) => setHour(e.target.value)} />
-          </label>
-          <label className='timeslotlabel'>
-            Minutes:
-            <input type="number" value={minutes} onChange={(e) => setMinutes(e.target.value)} />
-          </label>
-          <button type="submit">Add Time Slot</button>
-        </form>
-      </div>
-      <br/><br/>
-      <br/><br/>
-      <br/><br/>
-      <br/><br/>
+    <MDBContainer style={{ marginLeft:'500px', maxWidth:'600px'}}>
+      <MDBRow className="timeslotcontent">
+        <MDBCol>
+          <h2>Add Time Slot</h2>
+          <form onSubmit={handleSubmit}>
+            <MDBInput
+              label="Hour"
+              type="number"
+              value={hour}
+              onChange={(e) => setHour(e.target.value)}
+            />
+            <MDBInput
+              label="Minutes"
+              type="number"
+              value={minutes}
+              onChange={(e) => setMinutes(e.target.value)}
+            />
+            <MDBBtn className="timeslot-button" type="submit">Add Time Slot</MDBBtn>
+          </form>
+        </MDBCol>
+      </MDBRow>
 
-      <div className="timeslottable">
-        <h2>Time Slots</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Hour</th>
-              <th>Minute</th>
-            </tr>
-          </thead>
-          <tbody>
-            {timeslots.map((timeslot) => (
-              <tr key={timeslot.id}>
-                <td>
-                  <input
-                    className="input-field"
-                    type="text"
-                    placeholder="Hour"
-                    value={editedAppointment[timeslot.id]?.hour || timeslot.hour}
-                    onChange={(event) => handleInputChange(event, 'hour', timeslot.id)}
-                  />
-                </td>
-                <td>
-                  <input
-                    className="input-field"
-                    type="text"
-                    placeholder="Minute"
-                    value={editedAppointment[timeslot.id]?.minutes || timeslot.minutes}
-                    onChange={(event) => handleInputChange(event, 'minute', timeslot.id)}
-                  />
-                </td>
+      <br /><br />
+      <br /><br />
+
+      <MDBRow className="timeslottable">
+        <MDBCol>
+          <h2>Time Slots</h2>
+          <MDBTable className="timeslot-table">
+            <MDBTableHead className="timeslot-thead">
+              <tr className="timeslot-tr">
+                <th className="timeslot-th">Hour</th>
+                <th className="timeslot-th">Minute</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            </MDBTableHead>
+            <MDBTableBody className="timeslot-tbody">
+              {timeslots.map((timeslot) => (
+                <tr key={timeslot.id}>
+                  <td className="timeslot-td">
+                    <MDBInput
+                      type="text"
+                      label="Hour"
+                      value={editedAppointment[timeslot.id]?.hour || timeslot.hour}
+                      onChange={(event) => handleInputChange(event, 'hour', timeslot.id)}
+                    />
+                  </td>
+                  <td className="timeslot-td">
+                    <MDBInput
+                      type="text"
+                      label="Minute"
+                      value={editedAppointment[timeslot.id]?.minutes || timeslot.minutes}
+                      onChange={(event) => handleInputChange(event, 'minute', timeslot.id)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </MDBTableBody>
+          </MDBTable>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
 };
 

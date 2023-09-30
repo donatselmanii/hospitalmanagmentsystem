@@ -1,6 +1,31 @@
 import express from 'express'
 import cookieParser from 'cookie-parser';
-import {CompletedAppointment, DeleteAppointment, InsertAppointment, InsertAppointmentTest, VerifyUser, CountAppointments, Appointments, AddSlots, TimeSlots, VerifyUserAppointments, CompletedAppointments, UnfinishedAppointments, UserReports, VerifyUserRole, DoctorAppointments, getDoctorAppointments} from '../Controllers/AppointmentController.js';
+import {CompletedAppointment,
+    DeleteAppointment,
+    InsertAppointment,
+    InsertAppointmentTest,
+    VerifyUser,
+    CountAppointments,
+    Appointments,
+    AddSlots,
+    TimeSlots,
+    VerifyUserAppointments,
+    CompletedAppointments,
+    UnfinishedAppointments,
+    UserReports,
+    VerifyUserRole,
+    DoctorAppointments,
+    getDoctorAppointments,
+    UpdateMedicalReport,
+    InsertMedicalReport,
+    CheckMedicalReportExists,
+    UserReport,
+    LatestReport,
+    InsertMedicine,
+    getMedicalReportByReportId,
+    fetchAppointments,
+  } 
+    from '../Controllers/AppointmentController.js';
 
 
 const router = express.Router();
@@ -33,14 +58,39 @@ router.get('/userappointments', VerifyUserAppointments);
 
 //
 //
-router.get('/user-report/:appointmentid', UserReports);
+router.get('/user-report/:appointmentId', UserReports);
+//
+//
+router.get('/user-report-latest/:doctorId/:appointmentId', LatestReport);
+//
+//
+router.get('/user-report-fetch/:appointmentId', UserReport);
+//
+//
+router.post('/user-report/:appointmentId', InsertMedicalReport);
+//
+//
+router.post('/user-report/insert/medicine', InsertMedicine);
+//
+//
+router.put('/user-report/:appointmentId', UpdateMedicalReport);
+//
+//
+router.get('/user-report-exists/:appointmentId', CheckMedicalReportExists);
+
 //
 //
 router.get('/count', CountAppointments);
 
 //
 //
-router.get('/fetch', Appointments);
+router.get('/fetc', Appointments);
+
+//
+//
+router.get('/fetch/:timeRange', fetchAppointments);
+
+
 
 //
 //
@@ -66,5 +116,9 @@ router.get('/unfinishedappointments', UnfinishedAppointments);
 //
 //
 router.get('/fetchtimeslots', TimeSlots);
+
+//
+//
+router.get('/getMedicalReportByReportId/:reportid', getMedicalReportByReportId);
 
 export default router

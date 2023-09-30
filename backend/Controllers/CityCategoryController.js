@@ -1,4 +1,3 @@
-import { query } from 'express';
 import db from '../Database/db.js'
 
 // This function is responsible for inserting cities into option menus

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import '../../../../css/Appointment/SendEmail.css'
 
 function SendEmail(props) {
   const { userId } = useParams();
@@ -11,9 +12,6 @@ function SendEmail(props) {
   useEffect(() => {
     if (!userId) {
       console.log("User ID is not available");
-      // Handle the case when userId is undefined or not available
-      // For example, redirect to a different page or display an error message
-      // navigate("/users"); // Redirect to users page
     } else {
       console.log("User ID:", userId);
     }
@@ -38,14 +36,15 @@ function SendEmail(props) {
   }
 
   return (
-    <div>
-      <h1>Send Email</h1>
+    <div className='send-email-container'>
+      <h1 className='send-email-h1'>Send Email</h1>
       <textarea
+        className='send-email-textarea'
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Enter your message"
       />
-      <button onClick={sendEmail}>Send Email</button>
+      <button className='send-email-button' onClick={sendEmail}>Send Email</button>
     </div>
   );
 }

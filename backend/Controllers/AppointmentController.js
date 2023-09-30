@@ -29,12 +29,8 @@ export const VerifyUser = (req,res)=>{
         return res.json({ Error: "Token is not okay!" });
       } else {
         const idnum = decoded.idnum;
-        console.log('Verify-User Decoded token:', decoded);
-        console.log('Verify-User Decoded idnum:', idnum);
         req.idnum = idnum;
-        res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('Verify-User req.idnum:', req.idnum);
-        console.log('Verify-User res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+        res.locals.idnum = idnum;
         return res.json({ Status: "Success", idnum: idnum });
       }
     })
@@ -55,23 +51,15 @@ export const VerifyUserAppointments = (req, res) => {
         return res.json({ Error: 'Token is not valid' });
       } else {
         const idnum = decoded.idnum;
-        console.log('User-Appointments Decoded token:', decoded);
-        console.log('User-Appointments Decoded idnum:', idnum);
         req.idnum = idnum;
-        res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('User-Appointments req.idnum:', req.idnum);
-        console.log('User-Appointments res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+        res.locals.idnum = idnum;
 
-        // Query the database to get user role and other data
         const q = 'SELECT * FROM appointments WHERE idnum = ?';
 
         db.query(q, [idnum], (error, results) => {
           if (error) {
-            console.log('Error fetching appointments:', error);
             return res.json({ Error: 'Failed to fetch appointments' });
           }
-
-          console.log('Appointments:', results); // Log fetched appointments
 
           return res.json({ Status: 'Successs', appointments: results });
         });
@@ -91,30 +79,23 @@ export const CompletedAppointments = (req, res) => {
         return res.json({ Error: 'Token is not valid' });
       } else {
         const idnum = decoded.idnum;
-        console.log('User-Appointments Decoded token:', decoded);
-        console.log('User-Appointments Decoded idnum:', idnum);
         req.idnum = idnum;
-        res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('User-Appointments req.idnum:', req.idnum);
-        console.log('User-Appointments res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+        res.locals.idnum = idnum; 
 
-        // Query the database to get user role and other data
         const q = 'SELECT * FROM appointments WHERE idnum = ? and status like "completed" ';
 
         db.query(q, [idnum], (error, results) => {
           if (error) {
-            console.log('Error fetching appointments:', error);
             return res.json({ Error: 'Failed to fetch appointments' });
           }
-
-          console.log('Appointments:', results); // Log fetched appointments
-
           return res.json({ Status: 'Success', appointments: results });
         });
       }
     });
   }
 };
+
+
 export const UnfinishedAppointments = (req, res) => {
   const token = req.cookies.token;
 
@@ -126,24 +107,15 @@ export const UnfinishedAppointments = (req, res) => {
         return res.json({ Error: 'Token is not valid' });
       } else {
         const idnum = decoded.idnum;
-        console.log('User-Appointments Decoded token:', decoded);
-        console.log('User-Appointments Decoded idnum:', idnum);
         req.idnum = idnum;
-        res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('User-Appointments req.idnum:', req.idnum);
-        console.log('User-Appointments res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
+        res.locals.idnum = idnum; 
 
-        // Query the database to get user role and other data
         const q = 'SELECT * FROM appointments WHERE idnum = ? and status like "unfinished" ';
 
         db.query(q, [idnum], (error, results) => {
           if (error) {
-            console.log('Error fetching appointments:', error);
             return res.json({ Error: 'Failed to fetch appointments' });
           }
-
-          console.log('Appointments:', results); // Log fetched appointments
-
           return res.json({ Status: 'Success', appointments: results });
         });
       }
@@ -164,10 +136,8 @@ export const InsertAppointmentTest = (req, res) => {
 
   db.query(q, [idnum, citycategory, datetime, timeSlot], (error, results) => {
     if (error) {
-      console.error('Error saving appointment:', error);
       res.status(500).json({ message: 'Error saving appointment' });
     } else {
-      console.log('Appointment saved successfully!');
       res.status(200).json({ message: 'Appointment saved successfully' });
     }
   });
@@ -184,9 +154,7 @@ export const InsertAppointmentTest = (req, res) => {
 
     db.query(q, [id], (error,result)=>{
       if(error){
-        console.log(error)
       } else{
-        console.log('Deleted appointment with id: ${id} ');
       }
     })
   }
@@ -198,10 +166,8 @@ export const CancelAppointment = (req, res) => {
 
   db.query(query, [id], (error, result) => {
     if (error) {
-      console.log(error);
       res.status(500).json({ status: 'Error', message: 'Failed to cancel the appointment.' });
     } else {
-      console.log(`Deleted appointment with id: ${id}`);
       res.json({ status: 'Success', message: 'Appointment cancelled successfully.' });
     }
   });
@@ -220,6 +186,55 @@ export const Appointments = (req, res) =>{
     return res.json(data)
   })
 }
+
+export const fetchAppointments = async (req, res) => {
+  try {
+    let q = 'SELECT * FROM appointments WHERE appointment_date IS NOT NULL';
+
+    const { timeRange } = req.params;
+    const { search } = req.query; 
+
+  
+    if (search) {
+      q += ` AND (appointmentid LIKE '%${search}%' OR idnum LIKE '%${search}%' OR doctor_id LIKE '%${search}%')`; 
+    }
+
+    switch (timeRange) {
+      case 'today':
+        q += " AND DATE(appointment_date) = CURDATE()";
+        break;
+      case 'yesterday':
+        q += " AND DATE(appointment_date) = DATE(CURDATE() - INTERVAL 1 DAY)";
+        break;
+      case 'lastweek':
+        q += " AND appointment_date >= CURDATE() - INTERVAL 1 WEEK";
+        break;
+      case 'lastmonth':
+        q += " AND appointment_date >= CURDATE() - INTERVAL 1 MONTH";
+        break;
+      case 'last10':
+        q += " ORDER BY appointment_date DESC LIMIT 10";
+        break;
+      case 'all':
+        break;
+      default:
+        return res.status(400).json({ message: 'Invalid time range' });
+    }
+
+    db.query(q, (error, data) => {
+      if (error) {
+        return res.status(500).json(error);
+      }
+
+      return res.json(data);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+}
+
+
+
 
 
 //
@@ -265,11 +280,8 @@ export const CountAppointments = (req, res) => {
   
     db.query(q, values, (error, results) => {
       if (error) {
-        console.log(error);
         return res.status(500).json({ error: 'Failed to insert time slots' });
       } else {
-        console.log('Time slot inserted successfully!');
-        // Send a response to the client indicating the success of the operation
         return res.json({ status: 'success', message: 'Time slot inserted successfully' });
       }
     });
@@ -278,24 +290,167 @@ export const CountAppointments = (req, res) => {
 //
 //
 export const UserReports = (req, res) => {
-  const appointmentId = req.params.appointmentid;
+  const appointmentId = req.params.appointmentId;
   const query = "SELECT * FROM appointments WHERE appointmentid = ?";
 
 
   db.query(query, [appointmentId], (error, results) => {
     if (error) {
-      console.log(error);
       res.status(500).json({ Status: 'Error', Message: 'Failed to fetch medical report' });
     } else {
       if (results.length > 0) {
         const medicalReport = results[0].medical_report;
-        res.status(200).json({ Status: 'Success', MedicalReport: medicalReport });
+        const doctorid = results[0].doctor_id;
+        const idnum = results[0].idnum;
+        res.status(200).json({ Status: 'Success', MedicalReport: medicalReport, doctorid: doctorid, idnum: idnum });
       } else {
         res.status(404).json({ Status: 'Error', Message: 'Medical report not found' });
       }
     }
   });
 };
+
+//
+//
+export const UserReport = (req, res) => {
+  const appointmentId = req.params.appointmentId;
+  const query = "SELECT * FROM medical_report WHERE appointmentid = ?";
+
+
+  db.query(query, [appointmentId], (error, results) => {
+    if (error) {
+      res.status(500).json({ Status: 'Error', Message: 'Failed to fetch medical report' });
+    } else {
+      if (results.length > 0) {
+        const medicalReport = results[0].description;
+        const patientid = results[0].patientid;
+        res.status(200).json({ Status: 'Success', MedicalReport: medicalReport, patientid: patientid });
+      } else {
+        res.status(404).json({ Status: 'Error', Message: 'Medical report not found' });
+      }
+    }
+  });
+};
+
+//
+//
+export const getMedicalReportByReportId = (req, res) => {
+  const reportid = req.params.reportid;
+  const query = "SELECT * FROM medical_report WHERE id = ?";
+
+  db.query(query, [reportid], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ status: 'Error', message: 'Failed to fetch medical report' });
+    } else {
+      if (results.length > 0) {
+        const medicalReport = results[0].description;
+        const patientid = results[0].patientid;
+        res.status(200).json({ status: 'Success', medicalReport, patientid });
+      } else {
+        res.status(404).json({ status: 'Error', message: 'Medical report not found' });
+      }
+    }
+  });
+};
+
+
+export const LatestReport = (req, res) => {
+  const { doctorId, appointmentId } = req.params;
+  const query = "SELECT * FROM medical_report WHERE doctorid = ? AND appointmentid = ?";
+
+  db.query(query, [doctorId, appointmentId], (error, results) => {
+    if (error) {
+      res.status(500).json({ Status: 'Error', Message: 'Failed to fetch medical report' });
+    } else {
+      if (results.length > 0) {
+        const reportId = results[0].id;
+        res.status(200).json({ Status: 'Success', reportId: reportId });
+      } else {
+        res.status(404).json({ Status: 'Error', Message: 'Report not found' });
+      }
+    }
+  });
+};
+
+
+//
+//
+export const InsertMedicine = (req, res) => {
+  try {
+    const { reportid, productid, quantity, code } = req.body;
+   
+    const sql = 'INSERT INTO recommended_products (reportid, productid, quantity, code) VALUES (?, ?, ?, ?)';
+    const values = [reportid, productid, quantity, code];
+
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.error('Error adding product to cart:', err);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+
+      return res.status(201).json({ message: 'Product added to cart' });
+    });
+  } catch (error) {
+    console.error('Error adding product to cart:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+//
+//
+export const InsertMedicalReport = (req, res) => {
+  const { appointmentId } = req.params;
+  const { medicalReport, DoctorId, idnum } = req.body;
+  console.log(medicalReport, DoctorId, idnum,appointmentId )
+
+  const q = 'INSERT INTO medical_report (appointmentid, description, doctorid, patientid) VALUES (?, ?, ?, ?)';
+
+  db.query(q, [appointmentId, medicalReport, DoctorId, idnum], (error, results) => {
+    if (error) {
+      res.status(500).json({ error: 'Failed to insert medical report' });
+    } else {
+      return res.json({ Status: 'Success' });
+    }
+  });
+};
+
+
+export const CheckMedicalReportExists = (req, res) => {
+  const { appointmentId } = req.params;
+  const query = 'SELECT COUNT(*) AS reportCount FROM medical_report WHERE appointmentid = ?';
+
+  db.query(query, [appointmentId], (error, results) => {
+    if (error) {
+      console.error('Error checking medical report existence:', error);
+      res.status(500).json({ MedicalReportExists: false, error: 'Failed to check medical report existence' });
+    } else {
+      const reportCount = results[0].reportCount;
+      const medicalReportExists = reportCount > 0;
+      res.status(200).json({ MedicalReportExists: medicalReportExists });
+    }
+  });
+};
+
+
+export const UpdateMedicalReport = (req, res) => {
+  const { appointmentId } = req.params;
+  const { medicalReport } = req.body;
+  const query = 'UPDATE medical_report SET description = ? WHERE appointmentid = ?';
+
+  db.query(query, [medicalReport, appointmentId], (error, results) => {
+    if (error) {
+      console.error('Error updating medical report:', error);
+      res.status(500).json({ error: 'Failed to update medical report' });
+    } else {
+      res.status(200).json({ Status: 'Success' });
+    }
+  });
+};
+
+
+
+//
+//
 
 
 export const getDoctorAppointments = (req, res) => {
@@ -309,10 +464,7 @@ export const getDoctorAppointments = (req, res) => {
         return res.json({ Error: 'Token is not valid' });
       } else {
         const idnum = decoded.idnum;
-        console.log('Decoded token:', decoded);
-        console.log('Decoded idnum:', idnum);
 
-        // Query the database to get user role and other data
         const q = 'SELECT name, surname, phone, email, role FROM user WHERE idnum = ?';
 
         db.query(q, [idnum], (error, results) => {
@@ -330,7 +482,6 @@ export const getDoctorAppointments = (req, res) => {
           const phone = results[0].phone;
           const email = results[0].email;
 
-          // SQL query to fetch appointments of the doctor with user details
           const query = `
             SELECT a.*, u.idnum AS user_idnum, u.name AS user_name
             FROM appointments AS a
@@ -338,10 +489,8 @@ export const getDoctorAppointments = (req, res) => {
             WHERE a.doctor_id = ?;
           `;
 
-          // Execute the query with the provided doctorId parameter
           db.query(query, [idnum], (error, appointmentResults) => {
             if (error) {
-              console.log('Error retrieving appointments:', error);
               res.status(500).json({ error: 'Error retrieving appointments' });
             } else {
               res.json({
@@ -376,14 +525,10 @@ export const VerifyUserRole = (req, res) => {
         return res.json({ Error: 'Token is not valid' });
       } else {
         const idnum = decoded.idnum;
-        console.log('Decoded token:', decoded);
-        console.log('Decoded idnum:', idnum);
-        req.idnum = idnum;
-        res.locals.idnum = idnum; // Set res.locals.idnum
-        console.log('req.idnum:', req.idnum);
-        console.log('res.locals.idnum:', res.locals.idnum); // Log res.locals.idnum
 
-        // Query the database to get user role and other data
+        req.idnum = idnum;
+        res.locals.idnum = idnum;
+
         const q = 'SELECT name, surname, phone, email, role FROM user WHERE idnum = ?';
 
         db.query(q, [idnum], (error, results) => {
@@ -424,12 +569,9 @@ export const DoctorAppointments = (req, res) => {
   // Execute the query with the provided doctorId parameter
   db.query(query, [doctorId], (error, results) => {
     if (error) {
-      console.log('Error retrieving appointments:', error);
       res.status(500).json({ error: 'Error retrieving appointments' });
-      console.log(req.idnum)
     } else {
-      res.json(results); // Return the fetched appointments with user details as JSON response
-      console.log(req.idnum)
+      res.json(results);
     }
   });
 };
@@ -446,11 +588,8 @@ export const CompletedAppointment = (req, res) => {
 
   db.query(q, [appointmentId], (error, results) => {
     if (error) {
-      console.log('Error updating appointment status:', error);
       res.status(500).json({ error: 'Failed to update appointment status' });
     } else {
-      console.log('Appointment status updated successfully');
-      console.log(appointmentId);
       res.sendStatus(200);
     }
   });

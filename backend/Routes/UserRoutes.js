@@ -1,12 +1,16 @@
 import express from 'express'
-import { User, GetUser, RecentUser, UpdateUser, DeleteUser, UserRegister, CountUsers, CountDoctors, SendEmail }  from '../Controllers/UserController.js'
+import { User, GetUser, RecentUser, UpdateUser, DeleteUser, UserRegister, CountUsers, Doctors, CountDoctors, SendEmail, getStaff }  from '../Controllers/UserController.js'
 
 
 const router = express.Router();
 
 // This route is responsible about selecting user info from database
-// Used in: UserList.js(Frontend side)
+// Used in: Users.js(Frontend side)
 router.get('/', User);
+
+// This route is responsible about selecting user info from database
+// Used in: Staff.js(Frontend side)
+router.get('/getStaff', getStaff);
 
 // This route is responsible about selecting user info where id = ? from database
 // Used in: SendEmail.js(Frontend side)
@@ -40,5 +44,11 @@ router.get('/count', CountUsers);
 //
 //
 router.get('/countDoctors', CountDoctors);
+
+//
+//
+router.get('/doctors/:selectedCity', Doctors);
+
+
 
 export default router

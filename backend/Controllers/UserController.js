@@ -2,13 +2,23 @@ import db from '../Database/db.js'
 import bcrypt from 'bcrypt'
 import bodyParser from "body-parser";
 import nodemailer from "nodemailer";
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+
 
 
 // This function is responsible for selecting user info from database and showing it to the frontend code
 // Used in: UserList.js(Frontend side)
  export const User = (req, res) =>{
 
-    const q = "SELECT * FROM user"
+    const q = "SELECT * FROM user where role = 'patient' "
 
     db.query(q, (error, data) => {
       if (error) {
@@ -17,6 +27,39 @@ import nodemailer from "nodemailer";
       return res.json(data)
     })
  }
+
+//
+//
+ export const getStaff = (req, res) =>{
+
+  const q = "SELECT * FROM user WHERE NOT role = 'patient' "
+
+  db.query(q, (error, data) => {
+    if (error) {
+      return res.json(error)
+    }
+    return res.json(data)
+  })
+}
+ 
+ //
+ //
+
+ export const Doctors = (req, res) => {
+  const { selectedCity } = req.params; 
+
+  const q = `SELECT * FROM user WHERE NOT role = 'patient' AND city = ?`;
+
+
+  db.query(q, [selectedCity], (error, data) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error fetching doctors from: " });
+    } else {
+      res.json(data);
+    }
+  });
+};
 
 
 // This function is responsible for selecting 10 recent users with their info from database and showing it to the frontend code
@@ -78,18 +121,17 @@ export const DeleteUser = (req, res) => {
 const saltRounds = 10
 export const UserRegister = (req, res) => {
 
-    const { idnum, name, surname, phone, email, password, role} = req.body;
-    
+    const { idnum, name, surname, phone, email, password, city, address} = req.body;
 
     bcrypt.hash(password, saltRounds, (error, hash) => {
       if (error) {
         console.log(error)
       }
 
-      const values = [idnum, name, surname, phone, email, hash, 'patient'];
+      const values = [idnum, name, surname, phone, email, hash, city, 'patient', address];
       
       db.query(
-        "INSERT INTO user (idnum, name, surname, phone, email, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO user (idnum, name, surname, phone, email, password, city, role, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         values, (error, results) => {
           if (error) {
             console.log(err.message);
@@ -167,14 +209,13 @@ export const SendEmail = (req, res) => {
 
       service: "hotmail",
       auth: {
-        user: "labcourse1@hotmail.com",
-        pass: "UBTLABCOURSEE1",
-      },
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS, 
+  },
+});
 
-  });
-
-  const mailOptions = {
-    from: "labcourse1@hotmail.com", 
+const mailOptions = {
+  from: process.env.EMAIL_USER, 
     to: recipient,
     subject: subject,
     text: message,
@@ -186,7 +227,6 @@ export const SendEmail = (req, res) => {
       return res.status(500).json({ error: "Failed to send email" });
     }
 
-    console.log("Email sent:", info.response);
     return res.json({ success: true });
   });
 }

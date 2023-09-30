@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import '../../../../css/largedevices/Users.css'
+import classes from '../../../../css/largedevices/Users.module.css'
 
 function AdminMessages() {
   const [contactforms, setContactForms] = useState([]);
@@ -25,49 +25,46 @@ function AdminMessages() {
     }
   }
 
- 
-
   return (
-    <>
-      <h1 className="adminPageH1">Contact Form Messages</h1>
-      <table>
-        <thead>
-          <tr>
-            <th className="adminPageTableHead">ID</th>
-            <th className="adminPageTableHead">Name</th>
-            <th className="adminPageTableHead">Email</th>
-            <th className="adminPageTableHead">Comment</th>
-            <th className="adminPageTableHead">Status</th>
-            <th className="adminPageTableHead">Functions</th>
+    <div>
+      <h1 className={classes.adminPageH1}>Contact Form Messages</h1>
+      <table className={classes["Users-table"]}>
+        <thead className={classes["Users-thead"]}>
+          <tr className={classes["Users-tr"]}>
+            <th className={classes.adminPageTableHead}>ID</th>
+            <th className={classes.adminPageTableHead}>Name</th>
+            <th className={classes.adminPageTableHead}>Email</th>
+            <th className={classes.adminPageTableHead}>Comment</th>
+            <th className={classes.adminPageTableHead}>Status</th>
+            <th className={classes.adminPageTableHead}>Functions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className={classes["Users-tbody"]}>
           {contactforms.map((contactform) => (
-            <tr key={contactform.id}>
-              <td className="adminPagetable">
+            <tr key={contactform.id} className={classes["Users-tr"]}>
+              <td className={classes.adminPagetable}>
                 <input type="text" placeholder="ID" defaultValue={contactform.id} />
               </td>
-              <td className="adminPagetable">
+              <td className={classes.adminPagetable}>
                 <input type="text" placeholder="Name" defaultValue={contactform.name} />
               </td>
-              <td className="adminPagetable">
+              <td className={classes.adminPagetable}>
                 <input type="text" placeholder="Email" defaultValue={contactform.email} />
               </td>
-              <td className="adminPagetable">
+              <td className={classes.adminPagetable}>
                 <input type="text" placeholder="Comment" defaultValue={contactform.comment} />
               </td>
-              <td className="adminPagetable">
+              <td className={classes.adminPagetable}>
                 <input type="text" placeholder="status" defaultValue={contactform.status} />
               </td>
-              <td className="adminPagetable">
-            
-              <button onClick={() => confirmMessage(contactform.id)}>Confirm</button>
+              <td className={classes.adminPagetable}>
+                <button className={classes["Users-button"]} onClick={() => confirmMessage(contactform.id)}>Confirm</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
 
