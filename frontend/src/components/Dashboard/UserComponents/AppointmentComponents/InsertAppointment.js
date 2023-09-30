@@ -13,6 +13,7 @@ const InsertAppointment = () => {
   const [userEmail, setUserEmail] = useState('');
   const [patientName, setPatientName] = useState('');
 
+
   useEffect(() => {
     async function fetchUserRole() {
       try {
@@ -44,7 +45,6 @@ const InsertAppointment = () => {
   const handleSubmit = async () => {
     if (selectedTimeSlot) {
       try {
-        // Find the selected time slot object
         const selectedTimeSlotObj = timeslots.find((timeslot) => timeslot.id === selectedTimeSlot);
 
         
@@ -63,7 +63,6 @@ const InsertAppointment = () => {
         } else if (response.data.message === 'No available doctor found in the specified city category.') {
           setErrorMessage('No available doctor found in the specified city category.');
         } else {
-          // Send email to the user
           const emailData = {
             recipient: userEmail,
             subject: 'Appointment Confirmation',
