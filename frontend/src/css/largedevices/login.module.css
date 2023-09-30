@@ -1,5 +1,6 @@
   .box-form {
     margin: 0 auto;
+    margin-top: 40px;
     width: 90%;
     background: #FFFFFF;
     border-radius: 10px;
@@ -42,6 +43,13 @@
     font-weight: 900;
     margin-top: 40px;
     margin-bottom: 20px;
+  }
+  h5{
+    padding-top: 40px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  }
+  .loginp{
+    padding-top: 80px;
   }
   .box-form .left .overlay span .loginp {
     margin-top: 30px;

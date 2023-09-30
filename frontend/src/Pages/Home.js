@@ -68,10 +68,8 @@ function Home(){
                             <nav>
                                 <ul className="menu">
                                     <li><a href="#">HOME</a></li>
-                                    <li><a href="#">DEPARTMENTS</a></li>
-                                    <li><a href="#">DOCTORS</a></li>
-                                    <li><a href="#">PAGES</a></li>
-                                    <li><a href="#">BLOG</a></li>
+                                    <li><a href="/E-Pharmacy">E-PHARMACY</a></li>
+                                    <li><Link to="/Register"><a href="#">REGISTER</a></Link></li>
                                     <li><Link to="/Login"><a href="#">LOGIN</a></Link></li>
                                 </ul>
                             </nav>
@@ -83,16 +81,16 @@ function Home(){
                 <div className="container">
                     <div className="banner-text-left-side">
                         <div className="description">
-                            <h4>Caring for better life</h4>
+                            <h4 className='h4-home'>Caring for better life</h4>
                         </div>
                         <div className="title-banner">
-                            <h1>Leading the way in medical excellence</h1>
+                            <h1 className='h1-home'>Leading the way in medical excellence</h1>
                         </div>
                         <div className="paragraph">
-                            <p>Earth greater grass for good. Place for divide evening yielding them that. Creeping beginning over gathered brought.</p>
+                            <p className='p1-home'>Earth greater grass for good. Place for divide evening yielding them that. Creeping beginning over gathered brought.</p>
                         </div>
                         <div className="button">
-                            <button>take appointment</button>
+                            <button className='button-take'>take appointment</button>
                         </div>
                     </div>
                 </div>
@@ -332,25 +330,25 @@ function Home(){
             <div className="container">
                     <div className="container-1">
                         <div className="produkts">
-                            <h3>TOP PRODUCTS</h3>
+                            <h3 className='h3-footer'>TOP PRODUCTS</h3>
                             <ul>
-                                <li><a href="#">Managed Website</a></li>
-                                <li><a href="#">Managed Reputation</a></li>
-                                <li><a href="#">Power Tools</a></li>
-                                <li><a href="#">Marketing Service</a></li>
+                                <li className='li-footer'><a href="#">Managed Website</a></li>
+                                <li className='li-footer'><a href="#">Managed Reputation</a></li>
+                                <li className='li-footer'><a href="#">Power Tools</a></li>
+                                <li className='li-footer'><a href="#">Marketing Service</a></li>
                             </ul>
                         </div>
                         <div className="newsletter">
-                            <h3>NEWSLETTER</h3>
-                            <p>You can trust us. we only send promo offers, not a single.</p>
+                            <h3 className='h3-footer'>NEWSLETTER</h3>
+                            <p className='p-footer'>You can trust us. we only send promo offers, not a single.</p>
                             <form action="#">
                                 <input type="email" name="email" placeholder="Your email here" />
-                                <button type="submit">SUBSCRIPE NOW</button>
+                                <button className='button-take' type="submit">SUBSCRIBE NOW</button>
                             </form>
                         </div>
                         <div className="instagram">
                             <div className="title">
-                                <h3>INSTAGRAM FEED</h3>
+                                <h3 className='h3-footer'>INSTAGRAM FEED</h3>
                             </div>
                             <div className="image">
                                 <img src={instagram1} alt="instagram-1"/>
@@ -365,9 +363,6 @@ function Home(){
                         </div>
                     </div>
                     <div className="container-2">
-                        <div className="copyright">
-                            <span>Copyright ©2022 All rights reserved | This template is made with <i className="fa fa-heart-o" aria-hidden="true"></i> by <a href="#">Colorlib</a></span>
-                        </div>
                         <div className="social">
                             <ul>
                                 <li><a href="#"><i className="fa-brands fa-facebook-f"></i></a></li>
