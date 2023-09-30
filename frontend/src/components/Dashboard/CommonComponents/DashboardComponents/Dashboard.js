@@ -3,18 +3,25 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DashboardComponent from './DashboardComponent';
 import StaffComponent from '../../AdminComponents/StaffComponents/StaffComponent';
-import PatientComponent from '../../AdminComponents/PatientComponent';
-import EpharmComponent from '../EPharmComponents/EpharmComponent';
+import ClientOrder from '../../AdminComponents/UserManagmentComponents/ClientOrder';
 import AppointmentComponent from '../../AdminComponents/AppointmentComponents/AppointmentComponent';
 import TimeSlots from '../../AdminComponents/AppointmentComponents/TimeSlots'
-import ManageAppointmentsComponent from '../../AdminComponents/AppointmentComponents/ManageAppointmentsComponent'
 import UserCardComponent from '../Card/UserCardComponent'
 import AppointmentPatientComponent from '../../UserComponents/AppointmentComponents/AppointmentPatientComponent'
 import InsertAppointment from '../../UserComponents/AppointmentComponents/InsertAppointment';
 import ManageAppointmentsPatient from '../../UserComponents/AppointmentComponents/ManageAppointmentsPatient'
 import ContactForm from '../../UserComponents/FeedBackComponents/ContactForm';
 import DoctorAppointments from '../../DoctorComponents/Appointments/DoctorAppointments'
+import Users from '../../AdminComponents/UserManagmentComponents/Users'
+import Orders from '../../PharmComponents/Orders.js'
 import '../../../../css/Dashboardcss/dashboard.css'
+import AddProduct from '../../AdminComponents/EPharmComponents/AddProduct';
+import ProductList from '../../AdminComponents/EPharmComponents/ProductList';
+import InsertCompany from '../../AdminComponents/CategoryComponents/InsertCompany.js';
+import InsertProductCategory from '../../AdminComponents/CategoryComponents/InsertProductCategory';
+import AddCategory from '../../AdminComponents/CategoryComponents/AddCategory';
+import ProductCategoryList from '../../AdminComponents/EPharmComponents/ProductCategoryList';
+import CompanyList from '../../AdminComponents/EPharmComponents/CompanyList';
 
 
 function Dashboard() {
@@ -22,9 +29,9 @@ function Dashboard() {
   const [userRole, setUserRole] = useState('');
   const [expandedItems, setExpandedItems] = useState([]);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
-    // Make API call to fetch user role
     fetchUserRole();
   }, []);
 
@@ -35,7 +42,7 @@ function Dashboard() {
       setUserRole(role);
     } catch (error) {
       console.error('Error fetching user role:', error);
-      navigate('/login'); // Redirect to the login page
+      navigate('/login');
     }
   };
 
@@ -56,7 +63,6 @@ function Dashboard() {
   };
 
   const handleNestedItemClick = (item) => {
-    // Toggle the expansion of the nested item
     const isExpanded = isItemExpanded(item);
     if (isExpanded) {
       setExpandedItems((prevItems) => prevItems.filter((i) => i !== item));
@@ -64,7 +70,7 @@ function Dashboard() {
       setExpandedItems((prevItems) => [...prevItems, item]);
     }
   
-    setActiveComponent(item); // Set activeComponent to the clicked nested item
+    setActiveComponent(item); 
   };
   
 
@@ -81,11 +87,6 @@ function Dashboard() {
               Time Slots
             </a>
           </li>
-          <li>
-            <a href="#" onClick={() => handleNestedItemClick('ManageAppointments')}>
-              Manage Appointments
-            </a>
-          </li>
         </ul>
       );
     }
@@ -97,11 +98,6 @@ function Dashboard() {
               Time Slots
             </a>
           </li>
-          <li>
-            <a href="#" onClick={() => handleNestedItemClick('ManageAppointments')}>
-              Manage Appointments
-            </a>
-          </li>
         </ul>
       );
     }
@@ -111,11 +107,6 @@ function Dashboard() {
           <li>
             <a href="#" onClick={() => handleNestedItemClick('InsertAppointment')}>
               Insert Appointment 
-            </a>
-          </li>
-          <li>
-            <a href="#" onClick={() => handleNestedItemClick('ManageAppointmentsPatient')}>
-              Manage Appointments
             </a>
           </li>
           <li>
@@ -141,11 +132,8 @@ function Dashboard() {
     case 'staff':
       contentComponent = <StaffComponent />;
       break;
-    case 'patient':
-      contentComponent = <PatientComponent />;
-      break;
-    case 'epharm':
-      contentComponent = <EpharmComponent />;
+    case 'MyOrders':
+      contentComponent = <ClientOrder />;
       break;
     case 'appointment':
       contentComponent = <AppointmentComponent />;
@@ -156,9 +144,6 @@ function Dashboard() {
     case 'TimeSlots':
       contentComponent = <TimeSlots />;
       break;
-    case 'ManageAppointments':
-      contentComponent = < ManageAppointmentsComponent/>;
-      break; 
     case 'ManageAppointmentsPatient':
       contentComponent = < ManageAppointmentsPatient/>;
       break; 
@@ -171,7 +156,33 @@ function Dashboard() {
     case 'DoctorAppointments':
       contentComponent = < DoctorAppointments/>;
       break;
-      
+    case 'Users':
+      contentComponent = < Users/>;
+      break;
+    case 'Orders':
+      contentComponent = < Orders/>;
+      break;
+    case 'AddProduct':
+      contentComponent = < AddProduct/>;
+      break;
+    case 'ProductList':
+      contentComponent = < ProductList/>;
+      break;
+      case 'InsertCompany':
+        contentComponent = < InsertCompany/>;
+      break;
+    case 'InsertProductCategory':
+        contentComponent = < InsertProductCategory/>;
+      break;
+    case 'AddCategory':
+        contentComponent = < AddCategory/>;
+      break;
+    case 'Company':
+        contentComponent = < CompanyList/>;
+      break;
+    case 'ProductCategory':
+        contentComponent = < ProductCategoryList/>;
+      break;
     default:
       contentComponent = null;
   }
@@ -186,7 +197,7 @@ function Dashboard() {
             </a>
           </li>
           <li>
-            <a href="#" id="active--link" onClick={() => handleComponentChange('dashboard')}>
+            <a href="#" onClick={() => handleComponentChange('dashboard')}>
               Dashboard
             </a>
           </li>
@@ -196,13 +207,18 @@ function Dashboard() {
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => handleComponentChange('patient')}>
+            <a href="#" onClick={() => handleComponentChange('Users')}>
               Patients
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => handleComponentChange('epharm')}>
-              E-pharm
+            <a href="#" onClick={() => handleComponentChange('MyOrders')}>
+              Orders
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('ProductList')}>
+             Products
             </a>
           </li>
           <li>
@@ -214,6 +230,11 @@ function Dashboard() {
               Appointments
             </a>
             {isItemExpanded('appointment') && renderNestedItems('appointment')}
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('AddCategory')}>
+              Add Category
+            </a>
           </li>
           <li>
           <a href="#" onClick={handleLogout}>
@@ -231,8 +252,8 @@ function Dashboard() {
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => handleComponentChange('epharm')}>
-              E-pharm
+            <a href="#" onClick={() => handleComponentChange('MyOrders')}>
+              Orders
             </a>
           </li>
           <li>
@@ -257,6 +278,16 @@ function Dashboard() {
       return (
         <ul className="sidebar--items">
           <li>
+            <a href="#" id="active--link" onClick={() => handleComponentChange('usercard')}>
+              My info
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('MyOrders')}>
+              Orders
+            </a>
+          </li>
+          <li>
             <a href="#" onClick={() => handleComponentChange('DoctorAppointments')}>
               Appointments
             </a>
@@ -268,15 +299,65 @@ function Dashboard() {
         </li>
         </ul>
       );
+    } else if (userRole === 'pharm') {
+      return (
+        <ul className="sidebar--items">
+          <li>
+            <a href="#" id="active--link" onClick={() => handleComponentChange('usercard')}>
+              My info
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('Orders')}>
+              Orders
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('AddProduct')}>
+              Add Products
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('ProductList')}>
+             Products
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('InsertCompany')}>
+              Add Company
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('InsertProductCategory')}>
+             Add Product Category
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('Company')}>
+            Company Category
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => handleComponentChange('ProductCategory')}>
+            Product Category
+            </a>
+          </li>
+          <li>
+          <a href="#" onClick={handleLogout}>
+            Logout
+          </a>
+          </li>
+        </ul>
+      );
     } else {
-      navigate('/login'); // Redirect to the login page
+      navigate('/login');
       return null;
     }
   };
 
   return (
     <div>
-      <section className="header">{/* Header content */}</section>
+      <section className="header"></section>
       <section className="main">
         <div className="sidebar">
           {renderNavbar()}
