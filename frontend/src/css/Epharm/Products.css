@@ -1,0 +1,109 @@
+.products-container {
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+  
+  /* Product Grid Container */
+  .products-list {
+    display: grid;
+    grid-template-columns: repeat(4, 160px); /* Display 4 products in a row with 200px width each */
+    gap: 90px; /* Gap between products */
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  /* Product Item */
+  .product {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 160px; /* Expand to fill the grid cell */
+    height: 280px; /* Set the height to 280px */
+  }
+  
+  
+  .product-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .product-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .product-price {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  .add-to-cart-button {
+    background-color: #ff9900;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-to-cart-button:hover {
+    background-color: #e68000;
+  }
+  
+  /* Pagination */
+  .pagination {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .page-number {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .page-number:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .page-number.active {
+    background-color: #ff9900;
+    color: #fff;
+    border-color: #ff9900;
+  }
+
+  /*Search Bar*/
+  .search-bar {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .search-input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .category-select {
+    width: 28%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
