@@ -1,123 +1,229 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  MDBInput,
+  MDBBtn,
+  MDBCard,
+  MDBCardBody,
+  MDBCardText,
+  MDBCardTitle,
+  MDBTextArea,
+  MDBCol,
+  MDBRow,
+} from "mdb-react-ui-kit";
 
 const AddProduct = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    companycategory: "",
+    productcategory: "",
+    description: "",
+    price: "",
+    stock: "",
+    file: null,
+    preview: "",
+  });
+
+  const [CompanyCategory, setCompanyCategory] = useState([]);
+  const [ProductCategory, setProductCategory] = useState([]);
+  const [idnum, setIdnum] = useState("");
+  const [email, setUserEmail] = useState("");
+  const [name, setUserName] = useState("");
+  const [role, setUserRole] = useState("");
+
   const navigate = useNavigate();
 
-  const loadImage = (e) => {
+  useEffect(() => {
+    async function fetchCompanyCategory() {
+      try {
+        const response = await axios.get("http://localhost:8081/company");
+        setCompanyCategory(response.data);
+      } catch (error) {
+        console.error("Error fetching company categories:", error);
+      }
+    }
+    fetchCompanyCategory();
+  }, []);
+
+  useEffect(() => {
+    async function fetchProductCategory() {
+      try {
+        const response = await axios.get("http://localhost:8081/productcategory");
+        setProductCategory(response.data);
+      } catch (error) {
+        console.error("Error fetching product categories:", error);
+      }
+    }
+    fetchProductCategory();
+  }, []);
+
+  useEffect(() => {
+    async function fetchUserRole() {
+      try {
+        const response = await axios.get("http://localhost:8081/login/rolecheck", {
+          withCredentials: true,
+        });
+        const { idnum, email, name, role } = response.data;
+        setIdnum(idnum);
+        setUserEmail(email);
+        setUserName(name);
+        setUserRole(role);
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+      }
+    }
+
+    fetchUserRole();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
+    setFormData({ ...formData, [name]: inputValue });
+  };
+
+  const handleImageChange = (e) => {
     const image = e.target.files[0];
-    setFile(image);
-    setPreview(URL.createObjectURL(image));
+    setFormData({ ...formData, file: image, preview: URL.createObjectURL(image) });
   };
 
   const saveProduct = async (e) => {
     e.preventDefault();
-    if (!file) {
-      console.log("No file selected");
-      return;
-    }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("price", price);
+    const data = new FormData();
+    data.append("file", formData.file);
+    data.append("title", formData.title);
+    data.append("companycategory", formData.companycategory);
+    data.append("productcategory", formData.productcategory);
+    data.append("description", formData.description);
+    data.append("price", formData.price);
+    data.append("stock", formData.stock);
+    data.append("idnum", idnum);
+    data.append("email", email);
+    data.append("name", name);
+    data.append("role", role);
 
     try {
-      await axios.post("http://localhost:8081/epharm", formData, {
+      const response = await axios.post("http://localhost:8081/epharm", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      navigate("/");
+      console.log(response.data);
+      navigate("/ProductList");
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="columns is-centered mt-5">
-      <div className="column is-half">
-        <form onSubmit={saveProduct}>
-          <div className="field">
-            <label className="label">Product Name</label>
-            <div className="control">
-              <input
+    <MDBRow style={{ marginLeft: '600px'}}>
+      <MDBCol size="auto">
+        <MDBCard>
+          <MDBCardBody>
+            <form onSubmit={saveProduct}>
+              <MDBInput
+                label="Product Name"
                 type="text"
-                className="input"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Product Name"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                outline
               />
-            </div>
-          </div>
 
-          <div className="field">
-            <label className="label">Description</label>
-            <div className="control">
-              <input
-                type="text"
-                className="input"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Price</label>
-            <div className="control">
-              <input
-                type="text"
-                className="input"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="Price"
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Image</label>
-            <div className="control">
-              <div className="file">
-                <label className="file-label">
-                  <input
-                    type="file"
-                    className="file-input"
-                    onChange={loadImage}
-                  />
-                  <span className="file-cta">
-                    <span className="file-label">Choose a file...</span>
-                  </span>
-                </label>
+              <div className="mb-3">
+                <label className="form-label">Company Category</label>
+                <select
+                  className="form-select"
+                  name="companycategory"
+                  value={formData.companycategory}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Company</option>
+                  {CompanyCategory.map((company) => (
+                    <option key={company.id} value={company.companyname}>
+                      {company.companyname}
+                    </option>
+                  ))}
+                </select>
               </div>
-            </div>
-          </div>
 
-          {preview && (
-            <figure className="image is-128x128">
-              <img src={preview} alt="Preview Image" />
-            </figure>
-          )}
+              <div className="mb-3">
+                <label className="form-label">Product Category</label>
+                <select
+                  className="form-select"
+                  name="productcategory"
+                  value={formData.productcategory}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Product</option>
+                  {ProductCategory.map((product) => (
+                    <option key={product.id} value={product.productname}>
+                      {product.productname}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="field">
-            <div className="control">
-              <button type="submit" className="button is-success">
+              <MDBTextArea
+                label="Description"
+                type="textarea"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                outline
+                rows={6}
+              />
+              <MDBInput
+                label="Price"
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleInputChange}
+                outline
+                step="0.01"
+                min="1"
+              />
+
+              <MDBInput
+                label="Items in Stock"
+                type="number"
+                name="stock"
+                value={formData.stock}
+                onChange={handleInputChange}
+                outline
+                step="1"
+                min="1"
+              />
+
+              <div className="mb-3">
+                <label className="form-label">Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  onChange={handleImageChange}
+                />
+              </div>
+
+              {formData.preview && (
+                <div className="mb-3">
+                  <img
+                    src={formData.preview}
+                    alt="Preview Image"
+                    className="img-fluid"
+                  />
+                </div>
+              )}
+
+              <MDBBtn type="submit" color="primary">
                 Save
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+              </MDBBtn>
+            </form>
+          </MDBCardBody>
+        </MDBCard>
+      </MDBCol>
+    </MDBRow>
   );
 };
 
